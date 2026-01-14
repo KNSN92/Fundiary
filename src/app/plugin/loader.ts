@@ -1,5 +1,5 @@
 import type { PluginContext, PluginManifest } from "fundiary-api";
-import { clearTabbar } from "@/app/tabbar";
+import { unregisterAllTabbarItems } from "@/app/tabbar";
 import { unregisterAllPages } from "../page";
 
 let plugins: { [id: string]: PluginManifest } = {};
@@ -18,7 +18,7 @@ export default function loadPlugins() {
 }
 
 export function unloadPlugins() {
-	clearTabbar();
+	unregisterAllTabbarItems();
 	unregisterAllPages();
 	plugins = {};
 }
