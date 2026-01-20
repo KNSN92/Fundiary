@@ -1,6 +1,7 @@
 import Database from "@tauri-apps/plugin-sql";
 import { initDB as initDiaryDB } from "./diary-db";
 import { initDB as initDiaryTemplateTable } from "./diary-template-db";
+import { initDB as initImageTable } from "./image-db";
 
 export const DIARY_DB_VERSION = 1000;
 
@@ -11,6 +12,7 @@ async function initDB(): Promise<Database> {
 
 	await initDiaryTemplateTable(db);
 	await initDiaryDB(db);
+	await initImageTable(db);
 
 	return db;
 }
