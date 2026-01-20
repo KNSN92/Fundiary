@@ -4,9 +4,8 @@ import type { ReactNode } from "react";
 
 export type TextPaneData = {
 	text: string;
-	fontsize: number;
+	fontSize: number;
 	color: number;
-	day: Date;
 };
 
 export default {
@@ -15,20 +14,18 @@ export default {
 	size: { width: 1, height: 1 },
 	dataValidator: type({
 		text: "string",
-		fontsize: "number",
-		color: "0 <= number < 16777216",
-		day: "Date",
+		fontSize: "number",
+		color: "number",
 	}),
 	initData: () => ({
 		text: "",
-		fontsize: 32,
-		color: 0,
-		day: new Date(),
+		fontSize: 16,
+		color: 0xffffff,
 	}),
 	args: [
 		{
 			dataKey: "text",
-			name: "text",
+			name: "テキスト",
 			description: "日記の内容やタイトルまで、様々な用途に使えます。",
 			isParam: true,
 			inputType: {
@@ -37,27 +34,24 @@ export default {
 			},
 		},
 		{
-			dataKey: "fontsize",
+			dataKey: "fontSize",
 			name: "フォントサイズ",
+			description: "テキストのフォントサイズ（px）",
+			isParam: false,
 			inputType: {
 				kind: "number",
-				min: 1,
+				min: 8,
+				max: 72,
+				unit: "px",
 			},
 		},
 		{
 			dataKey: "color",
-			name: "背景色",
+			name: "文字色",
+			description: "テキストの色",
+			isParam: false,
 			inputType: {
 				kind: "color",
-				defaultValue: 0,
-			},
-		},
-		{
-			dataKey: "day",
-			name: "日付",
-			inputType: {
-				kind: "date",
-				autoToday: true,
 			},
 		},
 	],
@@ -72,12 +66,15 @@ function TextPaneComponent({ data }: { data: TextPaneData }) {
 		if (i < arr.length - 1) acc.push(<br key={i} />);
 		return acc;
 	}, [] as ReactNode[]);
+
+	const colorHex = `#${data.color.toString(16).padStart(6, "0")}`;
+
 	return (
 		<div
 			className="w-full h-full text-wrap wrap-break-word overflow-y-auto flex items-center justify-center"
 			style={{
-				backgroundColor: `#${data.color.toString(16).padStart(6, "0")}`,
-				fontSize: `${data.fontsize}px`,
+				fontSize: `${data.fontSize}px`,
+				color: colorHex,
 			}}
 		>
 			{text}
