@@ -30,13 +30,40 @@ export interface DateInput {
 	autoToday?: boolean;
 }
 
+export interface BulletListInput {
+	kind: "bulletList";
+	placeholder?: string;
+	maxItems?: number;
+	minItems?: number;
+}
+
+export interface SelectOption {
+	value: string;
+	label: string;
+}
+
+export interface SelectInput {
+	kind: "select";
+	options: SelectOption[];
+	placeholder?: string;
+}
+
+export interface ImageInput {
+	kind: "image";
+	accept?: string;
+	maxSizeBytes?: number;
+}
+
 export type Input =
 	| TitleInput
 	| TextInput
 	| CheckBoxInput
 	| NumberInput
 	| ColorInput
-	| DateInput;
+	| DateInput
+	| BulletListInput
+	| SelectInput
+	| ImageInput;
 
 // Inputのkindからデータ型へのマッピング
 export interface InputKindToDataType {
@@ -46,6 +73,9 @@ export interface InputKindToDataType {
 	number: number;
 	color: number;
 	date: Date;
+	bulletList: string[];
+	select: string;
+	image: string;
 }
 
 // export function defaultValue<T extends Input>(
