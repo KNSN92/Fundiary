@@ -1,10 +1,15 @@
 import clsx from "clsx";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { match } from "ts-pattern";
 
 interface Props {
 	col: number;
 	row: number;
 	showGrid?: boolean;
+	align?: {
+		x: "left" | "center" | "right";
+		y: "top" | "center" | "bottom";
+	};
 	className?: string;
 	children?: ReactNode;
 }
@@ -13,6 +18,7 @@ export default function PaneGrid({
 	row,
 	col,
 	showGrid,
+	align,
 	className,
 	children,
 }: Props) {
@@ -36,10 +42,20 @@ export default function PaneGrid({
 			removeEventListener("resize", updateSizeClass);
 		};
 	}, [row, col]);
+	const alignX = match(align?.x)
+		.with("left", () => "items-start")
+		.with("center", () => "items-center")
+		.with("right", () => "items-end")
+		.otherwise(() => "items-center");
+	const alignY = match(align?.y)
+		.with("top", () => "justify-start")
+		.with("center", () => "items-center")
+		.with("bottom", () => "justify-end")
+		.otherwise(() => "justify-center");
 	return (
 		<div
 			ref={gridWrapperRef}
-			className="size-full flex justify-center items-center"
+			className={clsx("size-full flex", alignX, alignY)}
 		>
 			<div
 				className={clsx(sizeClass, "grid", className, showGrid && "*:border")}

@@ -2,8 +2,6 @@ import ArrowsPointingOutIcon from "@heroicons/react/24/solid/ArrowsPointingOutIc
 import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ArkErrors } from "arktype";
 import { useEffect, useState } from "react";
-import { openPage } from "@/app/page";
-import { selectTab } from "@/app/tabbar";
 import * as Calendar from "@/components/calendar/Calendar";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
@@ -108,16 +106,21 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 	return (
 		<div key={diary.id} className="w-64 flex flex-col">
 			<div className="grow">
-			<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
-				{diary.data.map((paneData) => (
-					<Pane
-						key={paneData.id}
-						data={{
-							...paneData,
-						}}
-					/>
-				))}
-			</PaneGrid>
+				<PaneGrid
+					col={diary.colSize}
+					row={diary.rowSize}
+					align={{ x: "left", y: "top" }}
+					showGrid={false}
+				>
+					{diary.data.map((paneData) => (
+						<Pane
+							key={paneData.id}
+							data={{
+								...paneData,
+							}}
+						/>
+					))}
+				</PaneGrid>
 			</div>
 			<button
 				type="button"
@@ -174,11 +177,11 @@ function DiaryTemplateCard({
 				type="button"
 				className="border border-white rounded-xl px-2 py-1 cursor-pointer hover:brightness-75"
 				onClick={() => {
-fundiary.pages.					open("base:diary_write_page", {
+					fundiary.pages.open("base:diary_write_page", {
 						kind: "template",
 						data: diaryTemplate.id,
 					});
-fundiary.tabbar.					select("base:diary_write_tab");
+					fundiary.tabbar.select("base:diary_write_tab");
 				}}
 			>
 				使う
