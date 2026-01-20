@@ -1,11 +1,12 @@
-import { type DiaryPaneData, getDiaryPane } from "@/app/diary-pane";
+import type { DiaryPaneData } from "fundiary-api/api/diary-pane";
+import fundiary from "@/fundiary";
 
 interface Props {
 	data: DiaryPaneData;
 }
 
 export default function Pane({ data }: Props) {
-	const pane = getDiaryPane(data.pane);
+	const pane = fundiary.diaryPanes.get(data.pane);
 	if (pane == null) {
 		throw new Error(`DiaryPane not found: ${data.id}`);
 	}

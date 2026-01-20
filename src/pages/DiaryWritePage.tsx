@@ -1,17 +1,16 @@
 import { ArkErrors } from "arktype";
+import type {
+	DiaryPaneData,
+	ErasedDiaryPaneArg,
+} from "fundiary-api/api/diary-pane";
 import { useEffect, useState } from "react";
-import {
-	type DiaryPaneArg,
-	type DiaryPaneData,
-	getDiaryPane,
-} from "@/app/diary-pane";
-import { openPage, usePagePayload } from "@/app/page";
-import { selectTab } from "@/app/tabbar";
+import { usePagePayload } from "@/app/page";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { InputComponent } from "@/components/input/Input";
 import { createDiary } from "@/db/diary-db";
 import { getDiaryTemplate } from "@/db/diary-template-db";
+import fundiary from "@/fundiary";
 
 export default function DiaryWritePage() {
 	const usingTemplate = usePagePayload("template");
@@ -21,8 +20,8 @@ export default function DiaryWritePage() {
 	const [gridSize, setGridSize] = useState({ row: 1, col: 1 });
 	useEffect(() => {
 		if (typeof usingTemplate !== "string") {
-			openPage("base:diary_list_page");
-			selectTab("base:diary_list_tab");
+			fundiary.pages.open("base:diary_list_page");
+			fundiary.tabbar.select("base:diary_list_tab");
 			return;
 		}
 		getDiaryTemplate(usingTemplate as string).then((template) => {
@@ -33,34 +32,43 @@ export default function DiaryWritePage() {
 			setDiaryDataList(template.template as DiaryPaneData[]);
 		});
 	}, [usingTemplate]);
-	const paramInputs = diaryDataList.flatMap((diaryData) => {
-		const pane = getDiaryPane(diaryData.pane);
-		return (pane?.args as DiaryPaneArg<any>[])
+	const paramInputs = diaryDataList.map((diaryData) => {
+		const pane = fundiary.diaryPanes.get(diaryData.pane);
+		const args = (pane?.args ?? []) as ErasedDiaryPaneArg[];
+		return args
 			.filter((arg) => arg.isParam)
 			.map((arg) => [arg, diaryData] as const);
 	});
 	return (
-		<div className="text-white bg-blue-600 overflow-hidden size-full flex items-center justify-start text-4xl text-center">
-			<div className="bg-base-bg size-full basis-5xl px-4 pt-4 flex flex-col gap-4 overflow-y-auto">
-				{paramInputs.map(([arg, diaryData]) => (
-					<InputComponent
-						input={arg.inputType}
-						labelText={diaryData.name}
-						key={`${diaryData.id}-${arg.name}`}
-						value={diaryData.data[arg.dataKey] as any}
-						setValue={(v) => {
-							(diaryData.data as any)[arg.dataKey] = v;
-							setDiaryDataList([...diaryDataList]);
-						}}
-					/>
+		<div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
+			<div className="bg-base size-full basis-5xl px-4 pt-4 flex flex-col gap-4 overflow-y-auto">
+				{paramInputs.map((paneParamInputs) => (
+					<>
+						{paneParamInputs.map(([arg, diaryData]) => (
+							<InputComponent
+								input={arg.inputType}
+								labelText={
+									paneParamInputs.length > 1
+										? `${diaryData.name} - ${arg.name}`
+										: diaryData.name
+								}
+								key={`${diaryData.id}-${arg.name}`}
+								value={diaryData.data[arg.dataKey]}
+								setValue={(v: unknown) => {
+									diaryData.data[arg.dataKey] = v;
+									setDiaryDataList([...diaryDataList]);
+								}}
+							/>
+						))}
+					</>
 				))}
 				<button
 					type="button"
 					className="w-24 p-2 text-2xl bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
 					onClick={async () => {
 						await createDiary(diaryDataList, diaryTemplateId ?? undefined);
-						openPage("base:diary_list_page");
-						selectTab("base:diary_list_tab");
+						fundiary.pages.open("base:diary_list_page");
+						fundiary.tabbar.select("base:diary_list_tab");
 					}}
 				>
 					保存

@@ -1,86 +1,89 @@
-import { EventEmitter } from "fundiary-api";
+import type { TabbarItem } from "fundiary-api";
 import type { Identifier } from "fundiary-api/misc/identifier";
+import { atom, createStore, Provider, useAtomValue } from "jotai";
 import type { ReactNode } from "react";
-import { closePage, openPage } from "./page";
-import { atom, createStore, useAtomValue, Provider } from "jotai";
 
-const tabbarItemId2Index = new Map<Identifier, number>();
-const tabbarItems: TabbarItem[] = [];
-const selectedTab = atom<Identifier | null>(null);
+// Jotai atoms - モジュールレベルで定義
 const tabbarStore = createStore();
+const selectedTabIdAtom = atom<Identifier | null>(null);
+const tabbarItemsAtom = atom<TabbarItem[]>([]);
+
+/**
+ * TabbarのJotaiストアを提供するProvider
+ */
 export function TabbarProvider({ children }: { children: ReactNode }) {
-  return <Provider store={tabbarStore}>{children}</Provider>;
+	return <Provider store={tabbarStore}>{children}</Provider>;
 }
 
-export function registerTabbarItem(item: TabbarItem) {
-  Object.freeze(item);
-  tabbarItemId2Index.set(item.id, tabbarItems.length);
-  tabbarItems.push(item);
-  return item;
+/**
+ * 現在選択されているタブのインデックスを取得するフック
+ * @returns 選択されているタブのインデックス、未選択の場合はnull
+ */
+export function useSelectedTabIndex(): number | null {
+	const selectedId = useAtomValue(selectedTabIdAtom);
+	const items = useAtomValue(tabbarItemsAtom);
+
+	if (selectedId == null) {
+		return null;
+	}
+
+	const index = items.findIndex((item) => item.id === selectedId);
+	return index >= 0 ? index : null;
 }
 
-export function unregisterAllTabbarItems() {
-  tabbarItems.length = 0;
-  tabbarItemId2Index.clear();
+/**
+ * 現在選択されているタブのIDを取得するフック
+ * @returns 選択されているタブのID、未選択の場合はnull
+ */
+export function useSelectedTabId(): Identifier | null {
+	return useAtomValue(selectedTabIdAtom);
 }
 
-export function selectTab(id: Identifier) {
-  tabbarStore.set(selectedTab, id);
+/**
+ * 登録されているすべてのタブアイテムを取得するフック
+ * @returns タブアイテムの配列
+ */
+export function useTabbarItems(): TabbarItem[] {
+	return useAtomValue(tabbarItemsAtom);
 }
 
-export function deselectTab() {
-  tabbarStore.set(selectedTab, null);
-}
+/**
+ * Tabbarの管理クラス
+ * fundiary.tabbarからタブの登録・選択などの操作を行う
+ */
+export default class Tabbar {
+	register(item: TabbarItem): TabbarItem {
+		tabbarStore.set(tabbarItemsAtom, (prev) => [...prev, item]);
+		return item;
+	}
 
-export function useSelectedTab(): number | null {
-  const selectedId = useAtomValue(selectedTab);
-  if (selectedId == null) {
-    return null;
-  }
-  return tabbarItemId2Index.get(selectedId) ?? null;
-}
+	unregister(id: Identifier): void {
+		tabbarStore.set(tabbarItemsAtom, (prev) =>
+			prev.filter((item) => item.id !== id),
+		);
+	}
 
-export function useTabbar() {
-  return [...tabbarItems];
-}
+	unregisterAll(): void {
+		tabbarStore.set(tabbarItemsAtom, []);
+	}
 
-interface OnClickEvent {
-  name: "click";
-  payload: {
-    selecting: boolean;
-    toggleSelect: () => boolean;
-  };
-}
+	getAll(): TabbarItem[] {
+		return tabbarStore.get(tabbarItemsAtom);
+	}
 
-interface OnDeselectEvent {
-  name: "deselect";
-  payload: {
-    new_selected: Identifier | null;
-  };
-}
+	get(id: Identifier): TabbarItem | undefined {
+		return tabbarStore.get(tabbarItemsAtom).find((item) => item.id === id);
+	}
 
-type TabbarEvents = OnClickEvent | OnDeselectEvent;
+	select(id: Identifier): void {
+		tabbarStore.set(selectedTabIdAtom, id);
+	}
 
-export class TabbarItem {
-  id: Identifier;
-  element: () => ReactNode;
-  events: EventEmitter<TabbarEvents>;
+	deselect(): void {
+		tabbarStore.set(selectedTabIdAtom, null);
+	}
 
-  constructor(
-    id: Identifier,
-    element: () => ReactNode,
-    page_connection?: Identifier
-  ) {
-    this.id = id;
-    this.element = element;
-    this.events = new EventEmitter<TabbarEvents>();
-    if (page_connection == null) return;
-    this.events.on("click", (e) => {
-      if (e.toggleSelect()) {
-        openPage(page_connection);
-      } else {
-        closePage(page_connection);
-      }
-    });
-  }
+	getSelectedId(): Identifier | null {
+		return tabbarStore.get(selectedTabIdAtom);
+	}
 }

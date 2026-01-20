@@ -1,101 +1,91 @@
-import { EventEmitter, type Identifier, id } from "fundiary-api";
+import type { Identifier } from "fundiary-api";
+import type { Page } from "fundiary-api/api/page";
 import { atom, createStore, Provider, useAtomValue } from "jotai";
-import { type ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
-const pages = new Map<Identifier, Page>();
+export interface PagePayload {
+	kind: string;
+	data: unknown;
+}
 
 interface OpeningPageData {
-  openingPage: Identifier | null;
-  openingPagePayload: PagePayload | null;
-  prevPage: Identifier | null;
+	openingPage: Identifier | null;
+	openingPagePayload: PagePayload | null;
+	prevPage: Identifier | null;
 }
 
 const openingPageData = atom<OpeningPageData>({
-  openingPage: null,
-  openingPagePayload: null,
-  prevPage: null,
+	openingPage: null,
+	openingPagePayload: null,
+	prevPage: null,
 });
-const pageStore = createStore();
-export const PageProvider = ({ children }: { children: ReactNode }) => (
-  <Provider store={pageStore}>{children}</Provider>
-);
 
-export interface PagePayload {
-  kind: string;
-  data: unknown;
-}
+export default class Pages {
+	#pages = new Map<Identifier, Page>();
+	#pageStore = createStore();
 
-export function registerPage(plugin_id: string, page: Page) {
-  Object.freeze(page);
-  pages.set(id(plugin_id, page.id), page);
-  return page;
-}
+	register(page: Page) {
+		this.#pages.set(page.id, page);
+		return page;
+	}
 
-export function unregisterAllPages() {
-  pages.clear();
-}
+	unregister(identifier: Identifier) {
+		this.#pages.delete(identifier);
+	}
 
-export function openPage(
-  id: Identifier,
-  payload?: { kind: string; data: unknown }
-) {
-  if (!pages.has(id)) throw new Error(`Page not found: ${id}`);
-  pageStore.set(openingPageData, (prev) => ({
-    openingPage: id,
-    openingPagePayload: payload ?? null,
-    prevPage: prev.openingPage,
-  }));
-}
+	get(identifier: Identifier): Page | null {
+		return this.#pages.get(identifier) ?? null;
+	}
 
-export function closePage(id?: Identifier) {
-  if (id && pageStore.get(openingPageData).openingPage !== id) {
-    return;
-  }
-  pageStore.set(openingPageData, () => ({
-    openingPage: null,
-    openingPagePayload: null,
-    prevPage: null,
-  }));
-}
+	open(id: Identifier, payload?: { kind: string; data: unknown }) {
+		if (!this.#pages.has(id)) throw new Error(`Page not found: ${id}`);
+		this.#pageStore.set(openingPageData, (prev) => ({
+			openingPage: id,
+			openingPagePayload: payload ?? null,
+			prevPage: prev.openingPage,
+		}));
+	}
 
-export function usePage() {
-  const { openingPage } = useAtomValue(openingPageData);
-  const page = openingPage ? pages.get(openingPage) ?? null : null;
-  useEffect(() => {
-    page?.events.emit("onload", null);
-  }, [page]);
-  if (!openingPage) {
-    return null;
-  }
-  if (!page) {
-    throw new Error(`Page not found: ${openingPage}`);
-  }
-  return page;
+	close(id?: Identifier) {
+		if (id && this.#pageStore.get(openingPageData).openingPage !== id) {
+			return;
+		}
+		this.#pageStore.set(openingPageData, () => ({
+			openingPage: null,
+			openingPagePayload: null,
+			prevPage: null,
+		}));
+	}
+
+	component() {
+		const Inner = () => {
+			const { openingPage } = useAtomValue(openingPageData, {
+				store: this.#pageStore,
+			});
+			const page = openingPage && this.get(openingPage);
+			useEffect(() => {
+				page?.events.emit("onload", null);
+			}, [page]);
+			if (openingPage == null) {
+				return null;
+			}
+			if (!page) {
+				throw new Error(`Page not found: ${openingPage}`);
+			}
+			return <page.component />;
+		};
+		return (
+			<Provider store={this.#pageStore}>
+				<Inner />
+			</Provider>
+		);
+	}
 }
 
 export function usePagePayload(kind: string): unknown {
-  const { openingPagePayload } = useAtomValue(openingPageData);
-  if (openingPagePayload == null || openingPagePayload.kind !== kind) {
-    return null;
-  }
-  return openingPagePayload.data;
-}
-
-interface OnloadEvent {
-  name: "onload";
-  payload: null;
-}
-
-type PageEvents = OnloadEvent;
-
-export class Page {
-  id: string;
-  page: () => ReactNode;
-  events: EventEmitter<PageEvents>;
-
-  constructor(id: string, page: () => ReactNode) {
-    this.id = id;
-    this.page = page;
-    this.events = new EventEmitter<PageEvents>();
-  }
+	const { openingPagePayload } = useAtomValue(openingPageData);
+	if (openingPagePayload == null || openingPagePayload.kind !== kind) {
+		return null;
+	}
+	return openingPagePayload.data;
 }

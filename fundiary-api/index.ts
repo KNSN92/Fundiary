@@ -1,8 +1,8 @@
 import type { Permission } from "./api/permission";
 
-export type * from "./api";
+// export type * from "./api";
 export * from "./api";
-export type * from "./misc";
+// export type * from "./misc";
 export * from "./misc";
 
 export interface PluginManifest {

@@ -1,20 +1,15 @@
-import { useState } from "react";
-import { v7 as uuidv7 } from "uuid";
 import {
 	createDiaryPaneData,
-	type DiaryPaneArg,
 	type DiaryPaneData,
-	getAllDiaryPanes,
-	getDiaryPane,
-} from "@/app/diary-pane";
-import textPane from "@/app/diary-pane/text-pane";
-import { openPage } from "@/app/page";
-import { selectTab } from "@/app/tabbar";
+	type ErasedDiaryPaneArg,
+} from "fundiary-api/api/diary-pane";
+import { useState } from "react";
 import EditablePane from "@/components/diary-pane/edit/EditDiaryPane";
 import EditablePaneGrid from "@/components/diary-pane/edit/EditDiaryPaneGrid";
 import EditDiaryPaneGridResizer from "@/components/diary-pane/edit/EditDiaryPaneGridResizer";
 import { InputComponent } from "@/components/input/Input";
 import { createDiaryTemplate } from "@/db/diary-template-db";
+import fundiary from "@/fundiary";
 
 const initialDiaryDataList: DiaryPaneData[] = [];
 
@@ -27,7 +22,8 @@ export default function DiaryEditPage() {
 	const selectedPaneData =
 		diaryDataList.find((diaryData) => diaryData.id === selectedPaneId) ?? null;
 	const selectedPane =
-		(selectedPaneData && getDiaryPane(selectedPaneData.pane)) ?? null;
+		(selectedPaneData && fundiary.diaryPanes.get(selectedPaneData.pane)) ??
+		null;
 	const canResizeCol = diaryDataList.every(
 		(diaryData) => diaryData.pos.x + diaryData.size.width < gridSize.col,
 	);
@@ -35,8 +31,8 @@ export default function DiaryEditPage() {
 		(diaryData) => diaryData.pos.y + diaryData.size.height < gridSize.row,
 	);
 	return (
-		<div className="text-white bg-blue-600 overflow-hidden size-full flex items-center justify-start text-4xl text-center">
-			<div className="relative h-full p-8 grow overflow-hidden">
+		<div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
+			<div className="bg-base relative h-full p-8 grow overflow-hidden">
 				<div className="absolute bottom-0 left-0 p-4 z-10">
 					<EditDiaryPaneGridResizer
 						canResize={{ row: canResizeRow, col: canResizeCol }}
@@ -74,8 +70,8 @@ export default function DiaryEditPage() {
 							onClick={async () => {
 								if (templateName != null) {
 									await createDiaryTemplate(templateName, diaryDataList);
-									openPage("base:diary_list_page");
-									selectTab("base:diary_list_tab");
+									fundiary.pages.open("base:diary_list_page");
+									fundiary.tabbar.select("base:diary_list_tab");
 								}
 							}}
 							className="w-24 bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
@@ -103,19 +99,19 @@ export default function DiaryEditPage() {
 								}}
 								labelText="名称"
 								value={selectedPaneData.name}
-								setValue={(value) => {
+								setValue={(value: unknown) => {
 									selectedPaneData.name = value as string;
 									setDiaryDataList([...diaryDataList]);
 								}}
 							/>
-							{(selectedPane?.args as DiaryPaneArg<any>[]).map((arg) => (
+							{(selectedPane?.args as ErasedDiaryPaneArg[]).map((arg) => (
 								<InputComponent
 									key={`${selectedPaneData.id}-${arg.name}`}
 									input={arg.inputType}
 									labelText={arg.name + (arg.isParam ? " (パラメータ)" : "")}
-									value={(selectedPaneData.data as any)[arg.dataKey]}
-									setValue={(v) => {
-										(selectedPaneData.data as any)[arg.dataKey] = v;
+									value={selectedPaneData.data[arg.dataKey]}
+									setValue={(v: unknown) => {
+										selectedPaneData.data[arg.dataKey] = v;
 										setDiaryDataList([...diaryDataList]);
 									}}
 								/>
@@ -127,7 +123,7 @@ export default function DiaryEditPage() {
 						<hr className="my-8 border-dashed" />
 						<div className="flex flex-col gap-4">
 							<h1 className="font-bold text-3xl">追加</h1>
-							{getAllDiaryPanes().map((pane) => (
+							{fundiary.diaryPanes.getAll().map((pane) => (
 								<button
 									type="button"
 									className="w-fit p-2 mx-auto text-2xl bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
@@ -146,7 +142,6 @@ export default function DiaryEditPage() {
 									{pane.name}
 								</button>
 							))}
-							
 						</div>
 					</>
 				)}

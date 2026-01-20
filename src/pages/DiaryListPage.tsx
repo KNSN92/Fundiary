@@ -12,6 +12,7 @@ import {
 	type DiaryTemplateDBResponse,
 	getDiaryTemplates,
 } from "@/db/diary-template-db";
+import fundiary from "@/fundiary";
 
 export default function DiaryListPage() {
 	const [diaryTemplates, setDiaryTemplates] = useState<
@@ -53,13 +54,13 @@ export default function DiaryListPage() {
 		});
 	}, []);
 	return (
-		<div className="text-white bg-blue-600 size-full flex items-center justify-start text-4xl text-center">
-			<div className="bg-base-bg basis-80 h-full px-4 pt-4">
+		<div className="text-white size-full flex justify-start text-4xl text-center">
+			<div className="w-96 h-full px-4 pt-4">
 				<Calendar.Root />
 			</div>
-			<div className="grow h-full p-4 overflow-y-auto">
+			<div className="bg-base grow h-full p-4 overflow-y-auto">
 				<h1 className="mb-4">日誌一覧</h1>
-				<div className="flex flex-wrap gap-4">
+				<div className="flex flex-wrap gap-4 items-stretch">
 					{diaries.map((diary) => (
 						<DiaryCard key={diary.id} diary={diary} />
 					))}
@@ -91,7 +92,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 				>
 					<XMarkIcon className="size-8" />
 				</button>
-				<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
+				<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={false}>
 					{diary.data.map((paneData) => (
 						<Pane
 							key={paneData.id}
@@ -105,7 +106,8 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 		);
 	}
 	return (
-		<div key={diary.id} className="w-64 h-fit">
+		<div key={diary.id} className="w-64 flex flex-col">
+			<div className="grow">
 			<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
 				{diary.data.map((paneData) => (
 					<Pane
@@ -116,6 +118,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 					/>
 				))}
 			</PaneGrid>
+			</div>
 			<button
 				type="button"
 				className="cursor-pointer"
@@ -171,11 +174,11 @@ function DiaryTemplateCard({
 				type="button"
 				className="border border-white rounded-xl px-2 py-1 cursor-pointer hover:brightness-75"
 				onClick={() => {
-					openPage("base:diary_write_page", {
+fundiary.pages.					open("base:diary_write_page", {
 						kind: "template",
 						data: diaryTemplate.id,
 					});
-					selectTab("base:diary_write_tab");
+fundiary.tabbar.					select("base:diary_write_tab");
 				}}
 			>
 				使う

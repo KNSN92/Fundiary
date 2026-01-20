@@ -1,6 +1,7 @@
+import type { DiaryPaneData } from "fundiary-api/api/diary-pane";
 import { useContext } from "react";
 import { Rnd } from "react-rnd";
-import { type DiaryPaneData, getDiaryPane } from "@/app/diary-pane";
+import fundiary from "@/fundiary";
 import { EditablePaneGridContext } from "./EditDiaryPaneGrid";
 
 interface Props {
@@ -16,7 +17,7 @@ export default function EditablePane({
 	focused,
 	onClick,
 }: Props) {
-	const pane = getDiaryPane(data.pane);
+	const pane = fundiary.diaryPanes.get(data.pane);
 	const context = useContext(EditablePaneGridContext);
 	if (pane == null) {
 		throw new Error(`DiaryPane not found: ${data.id}`);

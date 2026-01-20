@@ -1,6 +1,6 @@
 import { type } from "arktype";
-import { ReactNode } from "react";
-import type { DiaryPane } from "../diary-pane";
+import type { DiaryPane } from "fundiary-api/api/diary-pane";
+import type { ReactNode } from "react";
 
 export type TextPaneData = {
 	text: string;

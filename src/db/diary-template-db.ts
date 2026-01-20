@@ -1,7 +1,10 @@
 import type Database from "@tauri-apps/plugin-sql";
 import { ArkErrors, type } from "arktype";
+import {
+	type DiaryPaneData,
+	DiaryPaneDataValidator,
+} from "fundiary-api/api/diary-pane";
 import { v7 as uuidv7 } from "uuid";
-import { type DiaryPaneData, DiaryPaneDataValidator } from "@/app/diary-pane";
 import { DIARY_DB_VERSION, getDatabase } from "./db";
 
 export async function initDB(db: Database) {
