@@ -28,7 +28,9 @@ export default function EditDiaryPaneGridResizer({
 				<MinusCircleIcon
 					className={clsx(
 						"size-full",
-						canResize.col ? "group-hover:brightness-80" : "fill-red-500",
+						canResize.col
+							? "group-hover:brightness-80 fill-white"
+							: "fill-red-500",
 					)}
 				/>
 			</button>
@@ -37,14 +39,14 @@ export default function EditDiaryPaneGridResizer({
 				onClick={() => setSize({ col: size.col + 1, row: size.row })}
 				className="h-full aspect-square col-start-2 flex items-center justify-center rouded-full cursor-pointer group"
 			>
-				<PlusCircleIcon className="size-full group-hover:brightness-80" />
+				<PlusCircleIcon className="size-full fill-white group-hover:brightness-80" />
 			</button>
 			<button
 				type="button"
 				onClick={() => setSize({ col: size.col, row: size.row + 1 })}
 				className="w-full aspect-square row-start-2 col-start-3 flex items-center justify-center rouded-full cursor-pointer group"
 			>
-				<PlusCircleIcon className="size-full group-hover:brightness-80" />
+				<PlusCircleIcon className="size-full fill-white group-hover:brightness-80" />
 			</button>
 			<button
 				type="button"
@@ -60,11 +62,13 @@ export default function EditDiaryPaneGridResizer({
 				<MinusCircleIcon
 					className={clsx(
 						"size-full",
-						canResize.row ? "group-hover:brightness-80" : "fill-red-500",
+						canResize.row
+							? "group-hover:brightness-80 fill-white"
+							: "fill-red-500",
 					)}
 				/>
 			</button>
-			<div className="min-w-16 size-full p-2 aspect-square row-start-2 row-span-2 col-span-2 flex items-center justify-center bg-black text-xl font-mono">
+			<div className="min-w-16 size-full p-2 aspect-square row-start-2 row-span-2 col-span-2 flex items-center justify-center bg-black text-xl text-white font-mono">
 				<span>{size.col}</span>
 				<span>x</span>
 				<span>{size.row}</span>

@@ -8,7 +8,7 @@ export default function createTextTab(name: string) {
 		return acc;
 	}, [] as ReactNode[]);
 	return () => (
-		<div className="size-full flex items-center justify-center text-xl text-center">
+		<div className="size-full flex items-center justify-center text-xl text-stone-200 text-center">
 			{brName}
 		</div>
 	);
