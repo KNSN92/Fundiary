@@ -54,7 +54,16 @@ export default function DiaryListPage() {
 	return (
 		<div className="text-white size-full flex justify-start text-4xl text-center">
 			<div className="w-96 h-full px-4 pt-4">
-				<Calendar.Root />
+				<Calendar.Root>
+					<Calendar.Header>
+						<Calendar.DateDisplay />
+						<Calendar.Control />
+					</Calendar.Header>
+					<Calendar.Body>
+						<Calendar.WeekdaysRow />
+						<Calendar.DaysGrid />
+					</Calendar.Body>
+				</Calendar.Root>
 			</div>
 			<div className="bg-base grow h-full p-4 overflow-y-auto">
 				<h1 className="mb-4">日誌一覧</h1>
@@ -90,7 +99,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 				>
 					<XMarkIcon className="size-8" />
 				</button>
-				<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={false}>
+				<PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
 					{diary.data.map((paneData) => (
 						<Pane
 							key={paneData.id}
@@ -110,7 +119,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
 					col={diary.colSize}
 					row={diary.rowSize}
 					align={{ x: "left", y: "top" }}
-					showGrid={false}
+					showGrid={true}
 				>
 					{diary.data.map((paneData) => (
 						<Pane
@@ -149,20 +158,23 @@ function DiaryTemplateCard({
 }) {
 	return (
 		<div key={diaryTemplate.id} className="w-64 h-fit">
-			<PaneGrid
-				col={diaryTemplate.colSize}
-				row={diaryTemplate.rowSize}
-				showGrid={true}
-			>
-				{diaryTemplate.template.map((paneData) => (
-					<Pane
-						key={paneData.id}
-						data={{
-							...paneData,
-						}}
-					/>
-				))}
-			</PaneGrid>
+			<div className="grow">
+				<PaneGrid
+					col={diaryTemplate.colSize}
+					row={diaryTemplate.rowSize}
+					align={{ x: "center", y: "top" }}
+					showGrid={true}
+				>
+					{diaryTemplate.template.map((paneData) => (
+						<Pane
+							key={paneData.id}
+							data={{
+								...paneData,
+							}}
+						/>
+					))}
+				</PaneGrid>
+			</div>
 			<h2 className="text-3xl font-bold">{diaryTemplate.name}</h2>
 			<p className="text-lg">
 				作成日: {new Date(diaryTemplate.createdAt).toLocaleDateString()}
