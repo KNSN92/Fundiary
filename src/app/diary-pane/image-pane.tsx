@@ -1,6 +1,6 @@
 import { type } from "arktype";
 import type { DiaryPane } from "fundiary-api/api/diary-pane";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getImageAsObjectURL } from "@/db/image-db";
 
 export type ImagePaneData = {
@@ -69,6 +69,7 @@ export default {
 } as DiaryPane<ImagePaneData>;
 
 function ImagePaneComponent({ data }: { data: ImagePaneData }) {
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	const imageUrlRef = useRef<string | null>(null);
 
 	useEffect(() => {
@@ -79,7 +80,7 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
 		}
 
 		if (!data.imageId) {
-			imageUrlRef.current = null;
+			setImageUrl(null);
 			return;
 		}
 
@@ -90,6 +91,7 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
 				return;
 			}
 			imageUrlRef.current = url;
+			setImageUrl(url);
 		});
 
 		return () => {
@@ -101,7 +103,7 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
 		};
 	}, [data.imageId]);
 
-	if (!imageUrlRef.current) {
+	if (!imageUrl) {
 		return (
 			<div className="w-full h-full flex items-center justify-center text-gray-400">
 				<span className="text-4xl">🖼️</span>
@@ -111,7 +113,7 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
 
 	return (
 		<img
-			src={imageUrlRef.current}
+			src={imageUrl}
 			alt=""
 			className="w-full h-full"
 			style={{
