@@ -143,7 +143,7 @@ export async function getImage(id: string): Promise<ImageData | null> {
 			size: number;
 			width: number | null;
 			height: number | null;
-			data: number[];
+			data: string;
 			createdAt: string;
 		}[]
 	>("SELECT * FROM Images WHERE id = ?", [id]);
@@ -160,7 +160,7 @@ export async function getImage(id: string): Promise<ImageData | null> {
 		size: row.size,
 		width: row.width,
 		height: row.height,
-		data: new Uint8Array(row.data),
+		data: new Uint8Array(JSON.parse(row.data)),
 		createdAt: new Date(row.createdAt),
 	};
 }
