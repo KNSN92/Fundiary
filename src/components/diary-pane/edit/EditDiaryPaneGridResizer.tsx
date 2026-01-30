@@ -1,5 +1,5 @@
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import clsx from "clsx";
+import cn from "@/libs/cn";
 
 interface Props {
 	canResize: { col: boolean; row: boolean };
@@ -20,13 +20,13 @@ export default function EditDiaryPaneGridResizer({
 				onClick={() =>
 					setSize({ col: Math.max(1, size.col - 1), row: size.row })
 				}
-				className={clsx(
+				className={cn(
 					"h-full aspect-square col-start-1 flex items-center justify-center rouded-full group",
 					canResize.col && "cursor-pointer",
 				)}
 			>
 				<MinusCircleIcon
-					className={clsx(
+					className={cn(
 						"size-full",
 						canResize.col
 							? "group-hover:brightness-80 fill-white"
@@ -54,13 +54,13 @@ export default function EditDiaryPaneGridResizer({
 				onClick={() =>
 					setSize({ col: size.col, row: Math.max(1, size.row - 1) })
 				}
-				className={clsx(
+				className={cn(
 					"w-full aspect-square row-start-3 col-start-3 flex items-center justify-center rouded-full group",
 					canResize.row && "cursor-pointer",
 				)}
 			>
 				<MinusCircleIcon
-					className={clsx(
+					className={cn(
 						"size-full",
 						canResize.row
 							? "group-hover:brightness-80 fill-white"

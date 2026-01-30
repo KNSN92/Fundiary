@@ -1,7 +1,7 @@
-import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useSelectedTabIndex, useTabbarItems } from "@/app/tabbar";
 import fundiary from "@/fundiary";
+import cn from "@/libs/cn";
 
 export default function Tabbar() {
 	const tabbarItems = useTabbarItems();
@@ -53,7 +53,7 @@ function TabbarItem({ children, onClick, selected }: TabbarItemProps) {
 	return (
 		<button
 			type="button"
-			className={clsx(
+			className={cn(
 				"min-w-16 h-5/4 flex justify-center items-end pointer-events-auto rounded-b-xl bg-base hover:bg-base-dark transition-all cursor-pointer",
 				selected && "h-3/2! bg-base-dark",
 			)}

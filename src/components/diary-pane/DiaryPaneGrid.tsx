@@ -1,6 +1,6 @@
-import clsx from "clsx";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { match } from "ts-pattern";
+import cn from "@/libs/cn";
 
 interface Props {
 	col: number;
@@ -53,12 +53,9 @@ export default function PaneGrid({
 		.with("bottom", () => "justify-end")
 		.otherwise(() => "justify-center");
 	return (
-		<div
-			ref={gridWrapperRef}
-			className={clsx("size-full flex", alignX, alignY)}
-		>
+		<div ref={gridWrapperRef} className={cn("size-full flex", alignX, alignY)}>
 			<div
-				className={clsx(sizeClass, "grid", className, showGrid && "*:border")}
+				className={cn(sizeClass, "grid", className, showGrid && "*:border")}
 				style={{
 					gridTemplateColumns: `repeat(${col}, 1fr)`,
 					gridTemplateRows: `repeat(${row}, 1fr)`,

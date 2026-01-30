@@ -1,5 +1,4 @@
 import { ArkErrors } from "arktype";
-import clsx from "clsx";
 import type { DiaryPaneData } from "fundiary-api/api/diary-pane";
 import { Suspense, use, useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
@@ -12,6 +11,7 @@ import LoadingSpin from "@/components/common/LoadingSpin";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { type DiaryDBResponse, getDiariesByDate } from "@/db/diary-db";
+import cn from "@/libs/cn";
 
 // 日誌表示コンポーネント
 function DiaryDisplay({
@@ -108,13 +108,12 @@ export default function DiaryCalendarPage() {
 			<button
 				type="button"
 				onClick={() => handleDateSelect(new Date(year, month - 1, day))}
-				className={clsx(
-					"rounded-full cursor-pointer transition-colors",
-					isToday && !isSelected && "bg-red-400",
-					isSelected && "bg-blue-500 text-white",
-					!isCurrentMonth && !isSelected && "text-stone-400",
-					isCurrentMonth && !isSelected && !isToday && "hover:bg-stone-700",
-				)}
+				className={cn("rounded-full cursor-pointer transition-colors", {
+					"bg-red-400": isToday && !isSelected,
+					"bg-blue-500 text-white": isSelected,
+					"text-stone-400": !isCurrentMonth && !isSelected,
+					"hover:bg-stone-700": isCurrentMonth && !isSelected && !isToday,
+				})}
 			>
 				{day}
 			</button>
