@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import {
 	createContext,
 	type ReactElement,
@@ -6,6 +5,7 @@ import {
 	useContext,
 	useState,
 } from "react";
+import cn from "@/libs/cn";
 
 interface CalendarDay {
 	year: number;
@@ -190,11 +190,10 @@ function CalendarDayCell({
 }: CalendarDayCellProps) {
 	return (
 		<div
-			className={clsx(
-				"rounded-full",
-				isToday && "bg-red-400",
-				!isCurrentMonth && "text-stone-400",
-			)}
+			className={cn("rounded-full", {
+				"bg-red-400": isToday,
+				"text-stone-400": !isCurrentMonth,
+			})}
 		>
 			{day}
 		</div>
