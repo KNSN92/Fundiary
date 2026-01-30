@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import * as Calendar from "@/components/calendar/Calendar";
+import LoadingSpin from "@/components/common/LoadingSpin";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { type DiaryDBResponse, getDiariesByDate } from "@/db/diary-db";
@@ -78,16 +79,6 @@ function DiaryDisplay({
 	);
 }
 
-// ローディング表示
-function DiaryLoading() {
-	return (
-		<div className="flex items-center gap-2 text-stone-400">
-			<div className="animate-spin h-5 w-5 border-2 border-stone-400 border-t-transparent rounded-full" />
-			<span>読み込み中...</span>
-		</div>
-	);
-}
-
 export default function DiaryCalendarPage() {
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [diariesPromise, setDiariesPromise] = useState(() =>
@@ -154,7 +145,7 @@ export default function DiaryCalendarPage() {
 					{selectedYear}年{selectedMonth}月{selectedDay}日の日誌
 				</h1>
 				<div className="grow min-h-0">
-					<Suspense fallback={<DiaryLoading />}>
+					<Suspense fallback={<LoadingSpin />}>
 						<DiaryDisplay diariesPromise={diariesPromise} />
 					</Suspense>
 				</div>
