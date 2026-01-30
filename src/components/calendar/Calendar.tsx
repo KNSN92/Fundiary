@@ -69,7 +69,9 @@ function getCalendarDays(year: number, month: number): CalendarDay[] {
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-interface CalendarCellProps {
+export interface CalendarCellProps {
+	year: number;
+	month: number;
 	day: number;
 	isToday: boolean;
 	isCurrentMonth: boolean;
@@ -151,6 +153,8 @@ export function DaysGrid({
 		<>
 			{calendar.map(({ year, month, day }) => (
 				<Cell
+					year={year}
+					month={month}
 					day={day}
 					isToday={
 						day === now.getDate() &&
