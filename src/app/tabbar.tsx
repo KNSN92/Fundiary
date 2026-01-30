@@ -1,10 +1,11 @@
 import type { TabbarItem } from "fundiary-api";
 import type { Identifier } from "fundiary-api/misc/identifier";
-import { atom, createStore, Provider, useAtomValue } from "jotai";
+import { atom, getDefaultStore, Provider, useAtomValue } from "jotai";
 import type { ReactNode } from "react";
 
+const store = getDefaultStore();
+
 // Jotai atoms - モジュールレベルで定義
-const tabbarStore = createStore();
 const selectedTabIdAtom = atom<Identifier | null>(null);
 const tabbarItemsAtom = atom<TabbarItem[]>([]);
 
@@ -12,7 +13,7 @@ const tabbarItemsAtom = atom<TabbarItem[]>([]);
  * TabbarのJotaiストアを提供するProvider
  */
 export function TabbarProvider({ children }: { children: ReactNode }) {
-	return <Provider store={tabbarStore}>{children}</Provider>;
+	return <Provider store={store}>{children}</Provider>;
 }
 
 /**
@@ -53,37 +54,35 @@ export function useTabbarItems(): TabbarItem[] {
  */
 export default class Tabbar {
 	register(item: TabbarItem): TabbarItem {
-		tabbarStore.set(tabbarItemsAtom, (prev) => [...prev, item]);
+		store.set(tabbarItemsAtom, (prev) => [...prev, item]);
 		return item;
 	}
 
 	unregister(id: Identifier): void {
-		tabbarStore.set(tabbarItemsAtom, (prev) =>
-			prev.filter((item) => item.id !== id),
-		);
+		store.set(tabbarItemsAtom, (prev) => prev.filter((item) => item.id !== id));
 	}
 
 	unregisterAll(): void {
-		tabbarStore.set(tabbarItemsAtom, []);
+		store.set(tabbarItemsAtom, []);
 	}
 
 	getAll(): TabbarItem[] {
-		return tabbarStore.get(tabbarItemsAtom);
+		return store.get(tabbarItemsAtom);
 	}
 
 	get(id: Identifier): TabbarItem | undefined {
-		return tabbarStore.get(tabbarItemsAtom).find((item) => item.id === id);
+		return store.get(tabbarItemsAtom).find((item) => item.id === id);
 	}
 
 	select(id: Identifier): void {
-		tabbarStore.set(selectedTabIdAtom, id);
+		store.set(selectedTabIdAtom, id);
 	}
 
 	deselect(): void {
-		tabbarStore.set(selectedTabIdAtom, null);
+		store.set(selectedTabIdAtom, null);
 	}
 
 	getSelectedId(): Identifier | null {
-		return tabbarStore.get(selectedTabIdAtom);
+		return store.get(selectedTabIdAtom);
 	}
 }
