@@ -9,6 +9,7 @@ import WelcomePage from "@/pages/WelcomePage";
 import { DiaryPanes } from "./app/diary-pane";
 import imagePane from "./app/diary-pane/image-pane";
 import textPane from "./app/diary-pane/text-pane";
+import { Modals } from "./app/modal";
 import Pages from "./app/page";
 import Tabbar from "./app/tabbar";
 
@@ -16,12 +17,14 @@ export interface Fundiary {
 	diaryPanes: DiaryPanes;
 	pages: Pages;
 	tabbar: Tabbar;
+	modals: Modals;
 }
 
 const fundiary: Fundiary = {
 	diaryPanes: new DiaryPanes(),
 	pages: new Pages(),
 	tabbar: new Tabbar(),
+	modals: new Modals(),
 };
 
 export default fundiary;
