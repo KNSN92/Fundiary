@@ -1,6 +1,6 @@
 import type { Identifier } from "fundiary-api";
 import type { Page } from "fundiary-api/api/page";
-import { atom, createStore, Provider, useAtomValue } from "jotai";
+import { atom, getDefaultStore, Provider, useAtomValue } from "jotai";
 import { useEffect } from "react";
 
 export interface PagePayload {
@@ -14,6 +14,8 @@ interface OpeningPageData {
 	prevPage: Identifier | null;
 }
 
+const store = getDefaultStore();
+
 const openingPageData = atom<OpeningPageData>({
 	openingPage: null,
 	openingPagePayload: null,
@@ -22,7 +24,6 @@ const openingPageData = atom<OpeningPageData>({
 
 export default class Pages {
 	#pages = new Map<Identifier, Page>();
-	#pageStore = createStore();
 
 	register(page: Page) {
 		this.#pages.set(page.id, page);
@@ -39,7 +40,7 @@ export default class Pages {
 
 	open(id: Identifier, payload?: { kind: string; data: unknown }) {
 		if (!this.#pages.has(id)) throw new Error(`Page not found: ${id}`);
-		this.#pageStore.set(openingPageData, (prev) => ({
+		store.set(openingPageData, (prev) => ({
 			openingPage: id,
 			openingPagePayload: payload ?? null,
 			prevPage: prev.openingPage,
@@ -47,10 +48,10 @@ export default class Pages {
 	}
 
 	close(id?: Identifier) {
-		if (id && this.#pageStore.get(openingPageData).openingPage !== id) {
+		if (id && store.get(openingPageData).openingPage !== id) {
 			return;
 		}
-		this.#pageStore.set(openingPageData, () => ({
+		store.set(openingPageData, () => ({
 			openingPage: null,
 			openingPagePayload: null,
 			prevPage: null,
@@ -60,7 +61,7 @@ export default class Pages {
 	component() {
 		const Inner = () => {
 			const { openingPage } = useAtomValue(openingPageData, {
-				store: this.#pageStore,
+				store: store,
 			});
 			const page = openingPage && this.get(openingPage);
 			useEffect(() => {
@@ -75,7 +76,7 @@ export default class Pages {
 			return <page.component />;
 		};
 		return (
-			<Provider store={this.#pageStore}>
+			<Provider store={store}>
 				<Inner />
 			</Provider>
 		);
