@@ -133,3 +133,35 @@ export async function getDiary(id: string) {
 	if (diaries.length === 0) return null;
 	return diaries[0];
 }
+
+/**
+ * 指定された日付の日誌を取得する
+ * @param date 対象の日付
+ * @returns その日に作成された日誌の配列
+ */
+export async function getDiariesByDate(
+	date: Date,
+): Promise<DiaryDBResponse[] | ArkErrors> {
+	const db = await getDatabase();
+	// その日の開始と終了のISO文字列を生成
+	const startOfDay = new Date(
+		date.getFullYear(),
+		date.getMonth(),
+		date.getDate(),
+	).toISOString();
+	const endOfDay = new Date(
+		date.getFullYear(),
+		date.getMonth(),
+		date.getDate() + 1,
+	).toISOString();
+
+	const result = await db.select(
+		`SELECT * FROM Diaries WHERE createdAt >= ? AND createdAt < ? ORDER BY createdAt DESC`,
+		[startOfDay, endOfDay],
+	);
+	const diaries = DiaryDBResponseValidator.array()(result);
+	if (diaries instanceof ArkErrors) {
+		return diaries;
+	}
+	return diaries as DiaryDBResponse[];
+}

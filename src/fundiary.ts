@@ -1,6 +1,7 @@
 import { TabbarItem } from "fundiary-api";
 import { Page } from "fundiary-api/api/page";
 import createTextTab from "@/components/tabbar/TextTab";
+import DiaryCalendarPage from "@/pages/DiaryCalendarPage";
 import DiaryEditPage from "@/pages/DiaryEditPage";
 import DiaryListPage from "@/pages/DiaryListPage";
 import DiaryWritePage from "@/pages/DiaryWritePage";
@@ -63,6 +64,18 @@ export function init_fundiary() {
 		.on("deselect", () => {
 			fundiary.pages.open("base:welcome_page");
 		});
+	fundiary.tabbar
+		.register(
+			new TabbarItem("base:diary_calendar_tab", createTextTab("カレンダー")),
+		)
+		.events.on("click", ({ toggleSelect }) => {
+			if (toggleSelect()) {
+				fundiary.pages.open("base:diary_calendar_page");
+			}
+		})
+		.on("deselect", () => {
+			fundiary.pages.open("base:welcome_page");
+		});
 	fundiary.pages
 		.register(new Page("base:welcome_page", WelcomePage))
 		.events.on("onload", () => {
@@ -71,6 +84,9 @@ export function init_fundiary() {
 	fundiary.pages.register(new Page("base:diary_list_page", DiaryListPage));
 	fundiary.pages.register(new Page("base:diary_edit_page", DiaryEditPage));
 	fundiary.pages.register(new Page("base:diary_write_page", DiaryWritePage));
+	fundiary.pages.register(
+		new Page("base:diary_calendar_page", DiaryCalendarPage),
+	);
 
 	fundiary.pages.open("base:welcome_page");
 }
