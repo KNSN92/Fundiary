@@ -107,12 +107,14 @@ export default function DiaryCalendarPage() {
 		return (
 			<button
 				type="button"
+				disabled={isSelected || !isCurrentMonth}
 				onClick={() => handleDateSelect(new Date(year, month - 1, day))}
-				className={cn("rounded-full cursor-pointer transition-colors", {
+				className={cn("rounded-full transition-colors", {
 					"bg-red-400": isToday && !isSelected,
 					"bg-blue-500 text-white": isSelected,
 					"text-stone-400": !isCurrentMonth && !isSelected,
 					"hover:bg-stone-700": isCurrentMonth && !isSelected && !isToday,
+					"cursor-pointer": isCurrentMonth && !isSelected,
 				})}
 			>
 				{day}
