@@ -46,6 +46,11 @@ export interface ErasedDiaryPaneArg {
 	isParam: boolean;
 }
 
+/**
+ * DiaryPaneの定義データ型
+ *
+ * ジェネリクスTは、paneが扱うデータの型を表す
+*/
 export interface DiaryPane<T> {
 	identifier: Identifier;
 	name: string;
@@ -61,6 +66,12 @@ export interface DiaryPane<T> {
 	};
 }
 
+
+/**
+ * DiaryPaneのインスタンスデータ型
+ *
+ * DiaryPaneDataは、実際に日記の中で使用されるpaneのデータを表す
+ */
 export interface DiaryPaneData {
 	id: string;
 	name: string;
