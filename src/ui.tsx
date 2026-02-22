@@ -16,7 +16,7 @@ function UI() {
         <Tabbar />
       </TabbarProvider>
       <div className="overflow-hidden flex-2 bg-base-bg">
-        {fundiary.pages.component()}
+        <fundiary.pages.component />
       </div>
     </div>
   );
