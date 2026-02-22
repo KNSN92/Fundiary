@@ -2,7 +2,6 @@ import ArrowsPointingOutIcon from "@heroicons/react/24/solid/ArrowsPointingOutIc
 import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ArkErrors } from "arktype";
 import { useEffect, useState } from "react";
-import * as Calendar from "@/components/calendar/Calendar";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { type DiaryDBResponse, getDiaries } from "@/db/diary-db";
@@ -53,18 +52,6 @@ export default function DiaryListPage() {
   }, []);
   return (
     <div className="text-white size-full flex justify-start text-4xl text-center">
-      <div className="w-96 h-full px-4 pt-16">
-        <Calendar.Root>
-          <Calendar.Header>
-            <Calendar.DateDisplay />
-            <Calendar.Control />
-          </Calendar.Header>
-          <Calendar.Body>
-            <Calendar.WeekdaysRow />
-            <Calendar.DaysGrid />
-          </Calendar.Body>
-        </Calendar.Root>
-      </div>
       <div className="grow h-full p-4 overflow-y-auto border-l-2 border-base-dark">
         <h1 className="mb-4">日誌一覧</h1>
         <div className="flex flex-wrap gap-4 items-stretch">
