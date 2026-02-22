@@ -5,6 +5,7 @@ import ModalRoot from "./components/modal/Modal";
 import Titlebar from "./components/titlebar/Titlebar";
 import Tabbar from "./components/tabbar/Tabbar";
 import fundiary from "./fundiary";
+import { PageComponent } from "./app/page";
 
 function UI() {
   const isFullscreen = useFullscreen();
@@ -16,7 +17,7 @@ function UI() {
         <Tabbar />
       </TabbarProvider>
       <div className="overflow-hidden flex-2 bg-base-bg">
-        <fundiary.pages.component />
+        <PageComponent pages={fundiary.pages} />
       </div>
     </div>
   );
