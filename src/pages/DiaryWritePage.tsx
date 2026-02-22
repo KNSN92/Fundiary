@@ -67,26 +67,24 @@ export default function DiaryWritePage() {
   return (
     <div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
       <div className="bg-base size-full basis-5xl px-4 pt-16 flex flex-col gap-4 overflow-y-auto">
-        {paramInputs.map((paneParamInputs) => (
-          <>
-            {paneParamInputs.map(([arg, diaryData]) => (
-              <InputComponent
-                input={arg.inputType}
-                labelText={
-                  paneParamInputs.length > 1
-                    ? `${diaryData.name} - ${arg.name}`
-                    : diaryData.name
-                }
-                key={`${diaryData.id}-${arg.name}`}
-                value={diaryData.data[arg.dataKey]}
-                setValue={(v: unknown) => {
-                  diaryData.data[arg.dataKey] = v;
-                  setDiaryDataList([...diaryDataList]);
-                }}
-              />
-            ))}
-          </>
-        ))}
+        {paramInputs.map((paneParamInputs) =>
+          paneParamInputs.map(([arg, diaryData]) => (
+            <InputComponent
+              input={arg.inputType}
+              labelText={
+                paneParamInputs.length > 1
+                  ? `${diaryData.name} - ${arg.name}`
+                  : diaryData.name
+              }
+              key={`${diaryData.id}-${arg.name}`}
+              value={diaryData.data[arg.dataKey]}
+              setValue={(v: unknown) => {
+                diaryData.data[arg.dataKey] = v;
+                setDiaryDataList([...diaryDataList]);
+              }}
+            />
+          )),
+        )}
         <div className="flex gap-4 flex-row">
           <button
             type="button"
