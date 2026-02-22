@@ -4,9 +4,9 @@ import {
 	type DiaryPaneData,
 	DiaryPaneDataValidator,
 } from "fundiary-api/api/diary-pane";
-import { v7 as uuidv7 } from "uuid";
 import { DIARY_DB_VERSION, getDatabase } from "./db";
 import { getDiaryTemplate } from "./diary-template-db";
+import { fromUuidOrThrow, uuid, type Uuid } from "fundiary-api";
 
 export async function initDB(db: Database) {
 	db.execute(`
@@ -25,8 +25,8 @@ export async function initDB(db: Database) {
   `);
 }
 
-export async function createDiary(data: DiaryPaneData[], templateId?: string) {
-	const id = uuidv7();
+export async function createDiary(data: DiaryPaneData[], templateId?: Uuid) {
+	const id = uuid();
 	const now = new Date().toISOString();
 
 	const colSize = data.reduce(
@@ -85,24 +85,13 @@ const DiaryDBResponseValidator = type({
 }).pipe.try(
 	(result) => {
 		const diaryData = DiaryPaneDataValidator.array()(JSON.parse(result.data));
-		return { ...result, data: diaryData };
-	},
-	type({
-		id: "string.uuid.v7",
-		templateId: "string.uuid.v7 | null",
-		templateName: "string | null",
-		version: "number.integer",
-		createdAt: "string.date.iso",
-		updatedAt: "string.date.iso",
-		colSize: "number.integer >= 0",
-		rowSize: "number.integer >= 0",
-		data: DiaryPaneDataValidator.array(),
-	}),
+		return { ...result, id: fromUuidOrThrow(result.id), data: diaryData };
+	}
 );
 
 export type DiaryDBResponse = {
-	id: string;
-	templateId: string | null;
+	id: Uuid;
+	templateId: Uuid | null;
 	templateName: string | null;
 	version: number;
 	createdAt: string;
@@ -123,7 +112,7 @@ export async function getDiaries(limit: number, offset = 0) {
 	return diaries;
 }
 
-export async function getDiary(id: string) {
+export async function getDiary(id: Uuid) {
 	const db = await getDatabase();
 	const result = await db.select(`SELECT * FROM Diaries WHERE id = ?`, [id]);
 	const diaries = DiaryDBResponseValidator.array()(result);

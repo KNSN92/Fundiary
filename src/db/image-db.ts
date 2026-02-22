@@ -1,7 +1,7 @@
 import type Database from "@tauri-apps/plugin-sql";
 import { ArkErrors, type } from "arktype";
-import { v7 as uuidv7 } from "uuid";
 import { getDatabase } from "./db";
+import { type Uuid, uuid } from "fundiary-api";
 
 /**
  * 画像テーブルの初期化
@@ -67,8 +67,8 @@ const ImageMetadataDBResponseValidator = type({
 export async function saveImage(
 	file: File | Blob,
 	name?: string,
-): Promise<string> {
-	const id = uuidv7();
+): Promise<Uuid> {
+	const id = uuid();
 	const now = new Date().toISOString();
 
 	const fileName = name ?? (file instanceof File ? file.name : "image");

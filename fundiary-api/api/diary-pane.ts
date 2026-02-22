@@ -1,8 +1,7 @@
 import { type Type, type } from "arktype";
-import type { Identifier } from "fundiary-api";
+import { fromUuidOrThrow, uuid, type Identifier, type Uuid } from "fundiary-api";
 import { IdentifierValidator } from "fundiary-api/misc/identifier";
 import type { ReactNode } from "react";
-import { v7 as uuidv7 } from "uuid";
 import type { Input, InputKindToDataType } from "../../src/app/input";
 
 export interface PanePos {
@@ -73,7 +72,7 @@ export interface DiaryPane<T> {
  * DiaryPaneDataは、実際に日記の中で使用されるpaneのデータを表す
  */
 export interface DiaryPaneData {
-	id: string;
+	id: Uuid;
 	name: string;
 	pane: Identifier;
 	pos: PanePos;
@@ -94,7 +93,10 @@ export const DiaryPaneDataValidator = type({
 		height: "number.integer >= 0",
 	},
 	data: "unknown",
-});
+}).pipe.try((result) => ({
+	...result,
+	id: fromUuidOrThrow(result.id),
+}));
 
 export function createDiaryPaneData<T>(
 	pane: DiaryPane<T>,
@@ -102,7 +104,7 @@ export function createDiaryPaneData<T>(
 	size: PaneSize,
 ): DiaryPaneData {
 	return {
-		id: uuidv7(),
+		id: uuid(),
 		name: pane.name,
 		pane: pane.identifier,
 		pos,

@@ -4,8 +4,9 @@ import {
 	type DiaryPaneData,
 	DiaryPaneDataValidator,
 } from "fundiary-api/api/diary-pane";
-import { v7 as uuidv7 } from "uuid";
+
 import { DIARY_DB_VERSION, getDatabase } from "./db";
+import { fromUuidOrThrow, type Uuid, uuid } from "fundiary-api";
 
 export async function initDB(db: Database) {
 	db.execute(`
@@ -26,7 +27,7 @@ export async function createDiaryTemplate(
 	name: string,
 	template: DiaryPaneData[],
 ) {
-	const id = uuidv7();
+	const id = uuid();
 	const now = new Date().toISOString();
 
 	const colSize = template.reduce(
@@ -75,22 +76,12 @@ const DiaryTemplateDBResponseValidator = type({
 		const diaryTemplateData = DiaryPaneDataValidator.array()(
 			JSON.parse(result.template),
 		);
-		return { ...result, template: diaryTemplateData };
-	},
-	type({
-		id: "string.uuid.v7",
-		name: "string",
-		version: "number.integer",
-		createdAt: "string.date.iso",
-		updatedAt: "string.date.iso",
-		colSize: "number.integer >= 0",
-		rowSize: "number.integer >= 0",
-		template: DiaryPaneDataValidator.array(),
-	}),
+		return { ...result, id: fromUuidOrThrow(result.id), template: diaryTemplateData };
+	}
 );
 
 export type DiaryTemplateDBResponse = {
-	id: string;
+	id: Uuid;
 	name: string;
 	version: number;
 	createdAt: string;
@@ -110,7 +101,7 @@ export async function getDiaryTemplates(limit: number, offset = 0) {
 	return diaryTemplates;
 }
 
-export async function getDiaryTemplate(id: string) {
+export async function getDiaryTemplate(id: Uuid) {
 	const db = await getDatabase();
 	const result = await db.select(`SELECT * FROM DiaryTemplates WHERE id = ?`, [
 		id,
@@ -120,5 +111,9 @@ export async function getDiaryTemplate(id: string) {
 		return diaryTemplates;
 	}
 	if (diaryTemplates.length === 0) return null;
-	return diaryTemplates[0];
+	const diaryTemplate = diaryTemplates[0];
+	if (diaryTemplate.template instanceof ArkErrors) {
+		return diaryTemplate;
+	}
+	return diaryTemplate;
 }
