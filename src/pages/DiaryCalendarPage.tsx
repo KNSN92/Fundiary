@@ -15,142 +15,142 @@ import cn from "@/libs/cn";
 
 // 日誌表示コンポーネント
 function DiaryDisplay({
-	diariesPromise,
+  diariesPromise,
 }: {
-	diariesPromise: Promise<DiaryDBResponse[] | ArkErrors>;
+  diariesPromise: Promise<DiaryDBResponse[] | ArkErrors>;
 }) {
-	const diaries = use(diariesPromise);
+  const diaries = use(diariesPromise);
 
-	if (diaries instanceof ArkErrors) {
-		return <p className="text-red-400">日誌の取得に失敗しました</p>;
-	}
+  if (diaries instanceof ArkErrors) {
+    return <p className="text-red-400">日誌の取得に失敗しました</p>;
+  }
 
-	if (diaries.length === 0) {
-		return <p className="text-stone-400">この日の日誌はありません</p>;
-	}
+  if (diaries.length === 0) {
+    return <p className="text-stone-400">この日の日誌はありません</p>;
+  }
 
-	// 1件のみの場合はSwiperを使わない
-	if (diaries.length === 1) {
-		const diary = diaries[0];
-		return (
-			<div className="size-full flex flex-col">
-				<p className="text-sm text-stone-400 mb-2 shrink-0">
-					{diary.templateName ?? "テンプレートなし"}
-				</p>
-				<div className="grow min-h-0">
-					<PaneGrid col={diary.colSize} row={diary.rowSize}>
-						{diary.data.map((pane: DiaryPaneData) => (
-							<Pane key={pane.id} data={pane} />
-						))}
-					</PaneGrid>
-				</div>
-			</div>
-		);
-	}
+  // 1件のみの場合はSwiperを使わない
+  if (diaries.length === 1) {
+    const diary = diaries[0];
+    return (
+      <div className="size-full flex flex-col">
+        <p className="text-sm text-stone-400 mb-2 shrink-0">
+          {diary.templateName ?? "テンプレートなし"}
+        </p>
+        <div className="grow min-h-0">
+          <PaneGrid col={diary.colSize} row={diary.rowSize}>
+            {diary.data.map((pane: DiaryPaneData) => (
+              <Pane key={pane.id} data={pane} />
+            ))}
+          </PaneGrid>
+        </div>
+      </div>
+    );
+  }
 
-	// 複数件の場合はSwiperを使用
-	return (
-		<Swiper
-			modules={[Navigation, Pagination]}
-			navigation
-			pagination={{ clickable: true }}
-			spaceBetween={16}
-			slidesPerView={1}
-			className="size-full px-24"
-		>
-			{diaries.map((diary, index) => (
-				<SwiperSlide key={diary.id} className="h-auto!">
-					<div className="size-full flex flex-col pb-8 px-4">
-						<p className="text-sm text-stone-400 mb-2 shrink-0">
-							{diary.templateName ?? "テンプレートなし"} ({index + 1}/
-							{diaries.length})
-						</p>
-						<div className="grow min-h-0">
-							<PaneGrid col={diary.colSize} row={diary.rowSize}>
-								{diary.data.map((pane: DiaryPaneData) => (
-									<Pane key={pane.id} data={pane} />
-								))}
-							</PaneGrid>
-						</div>
-					</div>
-				</SwiperSlide>
-			))}
-		</Swiper>
-	);
+  // 複数件の場合はSwiperを使用
+  return (
+    <Swiper
+      modules={[Navigation, Pagination]}
+      navigation
+      pagination={{ clickable: true }}
+      spaceBetween={16}
+      slidesPerView={1}
+      className="size-full px-24"
+    >
+      {diaries.map((diary, index) => (
+        <SwiperSlide key={diary.id} className="h-auto!">
+          <div className="size-full flex flex-col pb-8 px-4">
+            <p className="text-sm text-stone-400 mb-2 shrink-0">
+              {diary.templateName ?? "テンプレートなし"} ({index + 1}/
+              {diaries.length})
+            </p>
+            <div className="grow min-h-0">
+              <PaneGrid col={diary.colSize} row={diary.rowSize}>
+                {diary.data.map((pane: DiaryPaneData) => (
+                  <Pane key={pane.id} data={pane} />
+                ))}
+              </PaneGrid>
+            </div>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
 }
 
 export default function DiaryCalendarPage() {
-	const [selectedDate, setSelectedDate] = useState(new Date());
-	const [diariesPromise, setDiariesPromise] = useState(() =>
-		getDiariesByDate(new Date()),
-	);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [diariesPromise, setDiariesPromise] = useState(() =>
+    getDiariesByDate(new Date()),
+  );
 
-	// 日付が変更されたらPromiseを更新
-	function handleDateSelect(date: Date) {
-		setSelectedDate(date);
-		setDiariesPromise(getDiariesByDate(date));
-	}
+  // 日付が変更されたらPromiseを更新
+  function handleDateSelect(date: Date) {
+    setSelectedDate(date);
+    setDiariesPromise(getDiariesByDate(date));
+  }
 
-	// カスタムのクリック可能な日付セル
-	function ClickableDayCell({
-		year,
-		month,
-		day,
-		isToday,
-		isCurrentMonth,
-	}: Calendar.CalendarCellProps) {
-		const isSelected =
-			day === selectedDate.getDate() &&
-			month === selectedDate.getMonth() + 1 &&
-			year === selectedDate.getFullYear();
+  // カスタムのクリック可能な日付セル
+  function ClickableDayCell({
+    year,
+    month,
+    day,
+    isToday,
+    isCurrentMonth,
+  }: Calendar.CalendarCellProps) {
+    const isSelected =
+      day === selectedDate.getDate() &&
+      month === selectedDate.getMonth() + 1 &&
+      year === selectedDate.getFullYear();
 
-		return (
-			<button
-				type="button"
-				disabled={isSelected || !isCurrentMonth}
-				onClick={() => handleDateSelect(new Date(year, month - 1, day))}
-				className={cn("rounded-full transition-colors", {
-					"bg-red-400": isToday && !isSelected,
-					"bg-blue-500 text-white": isSelected,
-					"text-stone-400": !isCurrentMonth && !isSelected,
-					"hover:bg-stone-700": isCurrentMonth && !isSelected && !isToday,
-					"cursor-pointer": isCurrentMonth && !isSelected,
-				})}
-			>
-				{day}
-			</button>
-		);
-	}
+    return (
+      <button
+        type="button"
+        disabled={isSelected || !isCurrentMonth}
+        onClick={() => handleDateSelect(new Date(year, month - 1, day))}
+        className={cn("rounded-full transition-colors", {
+          "bg-red-400": isToday && !isSelected,
+          "bg-blue-500 text-white": isSelected,
+          "text-stone-400": !isCurrentMonth && !isSelected,
+          "hover:bg-stone-700": isCurrentMonth && !isSelected && !isToday,
+          "cursor-pointer": isCurrentMonth && !isSelected,
+        })}
+      >
+        {day}
+      </button>
+    );
+  }
 
-	const selectedYear = selectedDate.getFullYear();
-	const selectedMonth = selectedDate.getMonth() + 1;
-	const selectedDay = selectedDate.getDate();
+  const selectedYear = selectedDate.getFullYear();
+  const selectedMonth = selectedDate.getMonth() + 1;
+  const selectedDay = selectedDate.getDate();
 
-	return (
-		<div className="text-white size-full flex text-lg">
-			<div className="w-96 h-full px-4 pt-4 shrink-0">
-				<Calendar.Root>
-					<Calendar.Header>
-						<Calendar.DateDisplay />
-						<Calendar.Control />
-					</Calendar.Header>
-					<Calendar.Body>
-						<Calendar.WeekdaysRow />
-						<Calendar.DaysGrid cell={ClickableDayCell} />
-					</Calendar.Body>
-				</Calendar.Root>
-			</div>
+  return (
+    <div className="text-white size-full flex text-lg">
+      <div className="w-96 h-full px-4 pt-16 shrink-0">
+        <Calendar.Root>
+          <Calendar.Header>
+            <Calendar.DateDisplay />
+            <Calendar.Control />
+          </Calendar.Header>
+          <Calendar.Body>
+            <Calendar.WeekdaysRow />
+            <Calendar.DaysGrid cell={ClickableDayCell} />
+          </Calendar.Body>
+        </Calendar.Root>
+      </div>
 
-			<div className="bg-base grow h-full p-4 flex flex-col overflow-hidden">
-				<h1 className="text-2xl font-bold mb-4 shrink-0">
-					{selectedYear}年{selectedMonth}月{selectedDay}日の日誌
-				</h1>
-				<div className="grow min-h-0">
-					<Suspense fallback={<LoadingSpin />}>
-						<DiaryDisplay diariesPromise={diariesPromise} />
-					</Suspense>
-				</div>
-			</div>
-		</div>
-	);
+      <div className="grow h-full flex flex-col overflow-hidden border-l-2 border-base-dark">
+        <h1 className="text-2xl font-bold mb-4 shrink-0">
+          {selectedYear}年{selectedMonth}月{selectedDay}日の日誌
+        </h1>
+        <div className="grow min-h-0">
+          <Suspense fallback={<LoadingSpin />}>
+            <DiaryDisplay diariesPromise={diariesPromise} />
+          </Suspense>
+        </div>
+      </div>
+    </div>
+  );
 }
