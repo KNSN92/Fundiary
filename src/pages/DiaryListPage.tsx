@@ -1,4 +1,5 @@
 import ArrowsPointingOutIcon from "@heroicons/react/24/solid/ArrowsPointingOutIcon";
+import PencilSquareIcon from "@heroicons/react/24/solid/PencilSquareIcon";
 import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ArkErrors } from "arktype";
 import { useEffect, useState } from "react";
@@ -118,13 +119,28 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
           ))}
         </PaneGrid>
       </div>
-      <button
-        type="button"
-        className="cursor-pointer"
-        onClick={() => setIsFullScreen(!isFullScreen)}
-      >
-        <ArrowsPointingOutIcon className="size-8" />
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={() => setIsFullScreen(!isFullScreen)}
+        >
+          <ArrowsPointingOutIcon className="size-8" />
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={() => {
+            fundiary.pages.open("base:diary_write_page", {
+              kind: "edit",
+              data: diary.id,
+            });
+            fundiary.tabbar.select("base:diary_list_tab");
+          }}
+        >
+          <PencilSquareIcon className="size-8" />
+        </button>
+      </div>
       <p className="text-lg">
         作成日: {new Date(diary.createdAt).toLocaleDateString()}
       </p>

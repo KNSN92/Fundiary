@@ -59,12 +59,9 @@ export default class Pages {
   }
 }
 
-export function usePagePayload(kind: string): unknown {
+export function usePagePayload(): PagePayload | null {
   const { openingPagePayload } = useAtomValue(openingPageData);
-  if (openingPagePayload == null || openingPagePayload.kind !== kind) {
-    return null;
-  }
-  return openingPagePayload.data;
+  return openingPagePayload;
 }
 
 export function PageComponent({ pages }: { pages: Pages }) {

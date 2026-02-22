@@ -128,6 +128,23 @@ export async function getDiary(id: Uuid) {
  * @param date 対象の日付
  * @returns その日に作成された日誌の配列
  */
+export async function updateDiary(id: Uuid, data: DiaryPaneData[]) {
+	const now = new Date().toISOString();
+	const colSize = data.reduce(
+		(max, pane) => Math.max(max, pane.pos.x + pane.size.width),
+		0,
+	);
+	const rowSize = data.reduce(
+		(max, pane) => Math.max(max, pane.pos.y + pane.size.height),
+		0,
+	);
+	const db = await getDatabase();
+	await db.execute(
+		`UPDATE Diaries SET data = ?, colSize = ?, rowSize = ?, updatedAt = ? WHERE id = ?`,
+		[JSON.stringify(data), colSize, rowSize, now, id],
+	);
+}
+
 export async function getDiariesByDate(
 	date: Date,
 ): Promise<DiaryDBResponse[] | ArkErrors> {
