@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-	--color-base: #7965C1;
-	--color-base-dark: #483AA0;
-	--color-base-bg: #0E2148;
-	--color-base-text: #E3D095;
+	--color-base: #5F9598;
+	--color-base-dark: #1D546D;
+	--color-base-bg: #061E29;
+	--color-base-text: #061E29;
 }
