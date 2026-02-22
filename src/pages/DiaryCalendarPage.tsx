@@ -66,7 +66,7 @@ function DiaryDisplay({
               {diaries.length})
             </p>
             <div className="grow min-h-0">
-              <PaneGrid col={diary.colSize} row={diary.rowSize}>
+              <PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
                 {diary.data.map((pane: DiaryPaneData) => (
                   <Pane key={pane.id} data={pane} />
                 ))}
