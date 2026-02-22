@@ -141,7 +141,7 @@ export default function DiaryCalendarPage() {
         </Calendar.Root>
       </div>
 
-      <div className="grow h-full flex flex-col overflow-hidden border-l-2 border-base-dark">
+      <div className="grow h-full pt-16 flex flex-col overflow-hidden border-l-2 border-base-dark">
         <h1 className="text-2xl font-bold mb-4 shrink-0">
           {selectedYear}年{selectedMonth}月{selectedDay}日の日誌
         </h1>

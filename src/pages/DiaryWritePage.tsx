@@ -66,7 +66,7 @@ export default function DiaryWritePage() {
   });
   return (
     <div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
-      <div className="bg-base size-full basis-5xl px-4 pt-4 flex flex-col gap-4 overflow-y-auto">
+      <div className="bg-base size-full basis-5xl px-4 pt-16 flex flex-col gap-4 overflow-y-auto">
         {paramInputs.map((paneParamInputs) => (
           <>
             {paneParamInputs.map(([arg, diaryData]) => (
@@ -115,7 +115,7 @@ export default function DiaryWritePage() {
           </button>
         </div>
       </div>
-      <div className="relative size-full p-8">
+      <div className="relative size-full px-8 pt-16">
         <PaneGrid showGrid={true} row={gridSize.row} col={gridSize.col}>
           {diaryDataList.map((data) => (
             <Pane data={data} key={data.id} />

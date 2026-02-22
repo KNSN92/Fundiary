@@ -33,7 +33,7 @@ export default function DiaryEditPage() {
   );
   return (
     <div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
-      <div className="bg-base relative h-full p-8 grow overflow-hidden">
+      <div className="relative h-full p-8 pt-16 grow overflow-hidden">
         <div className="absolute bottom-0 left-0 p-4 z-10">
           <EditDiaryPaneGridResizer
             canResize={{ row: canResizeRow, col: canResizeCol }}
@@ -61,7 +61,7 @@ export default function DiaryEditPage() {
           ))}
         </EditablePaneGrid>
       </div>
-      <div className="bg-base-bg basis-80 h-full text-xl px-4 pt-4 overflow-y-auto">
+      <div className="bg-base-bg basis-80 h-full text-xl px-4 pt-16 overflow-y-auto border-l-2 border-base-dark">
         <div className="flex flex-col gap-4">
           <h1 className="font-bold text-3xl">テンプレート設定</h1>
           <div className="w-full flex gap-2">
