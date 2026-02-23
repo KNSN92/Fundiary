@@ -1,4 +1,4 @@
-import { type Identifier } from "fundiary-api";
+import type { Identifier } from "fundiary-api";
 import { atom, getDefaultStore, useAtomValue } from "jotai";
 import type { ReactNode } from "react";
 

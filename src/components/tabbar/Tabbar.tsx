@@ -4,7 +4,7 @@ import fundiary from "@/fundiary";
 import cn from "@/libs/cn";
 import getTabColor from "@/libs/tab-color";
 import type { TabbarItem as TabbarItemType } from "fundiary-api/api/tabbar";
-import { Identifier } from "fundiary-api";
+import type { Identifier } from "fundiary-api";
 
 export default function Tabbar() {
   const tabbarItems = useTabbarItems();
