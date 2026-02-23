@@ -1,6 +1,5 @@
 import ArrowsPointingOutIcon from "@heroicons/react/24/solid/ArrowsPointingOutIcon";
 import PencilSquareIcon from "@heroicons/react/24/solid/PencilSquareIcon";
-import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ArkErrors } from "arktype";
 import { useEffect, useState } from "react";
 import Pane from "@/components/diary-pane/DiaryPane";
@@ -13,6 +12,8 @@ import {
 import fundiary from "@/fundiary";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import type { Identifier } from "fundiary-api";
 
 export default function DiaryListPage() {
   const [diaryTemplates, setDiaryTemplates] = useState<
@@ -77,34 +78,40 @@ export default function DiaryListPage() {
   );
 }
 
-function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  if (isFullScreen) {
-    return (
-      <div className="w-screen h-screen fixed inset-0 bg-base-bg z-50 flex flex-col items-center justify-center p-8">
+function showDiaryFullScreen(diary: DiaryDBResponse) {
+  const id: Identifier = `diary_fullscreen:${diary.id}`;
+  fundiary.modals.show({
+    id,
+    bgClickToClose: true,
+    centered: true,
+    render: () => (
+      <div
+        className="max-w-[80vw] h-[80vh] size-auto bg-base-bg rounded-xl"
+        style={{
+          aspectRatio: `${diary.colSize} / ${diary.rowSize}`,
+        }}
+      >
         <button
           type="button"
-          onClick={() => setIsFullScreen(false)}
+          onClick={() => fundiary.modals.closeThis(id)}
           className="absolute top-4 right-4 cursor-pointer"
         >
-          <XMarkIcon className="size-8" />
+          <XMarkIcon className="size-8 text-base-text hover:text-base-text-hover" />
         </button>
         <PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
           {diary.data.map((paneData) => (
-            <Pane
-              key={paneData.id}
-              data={{
-                ...paneData,
-              }}
-            />
+            <Pane key={paneData.id} data={paneData} />
           ))}
         </PaneGrid>
       </div>
-    );
-  }
+    ),
+  });
+}
+
+function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
   return (
     <Card variant="bordered" className="w-64 flex flex-col">
-      <div className="grow aspect-square w-full">
+      <div className="aspect-square w-full">
         <PaneGrid
           col={diary.colSize}
           row={diary.rowSize}
@@ -121,32 +128,34 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
           ))}
         </PaneGrid>
       </div>
-      <div className="flex gap-2">
-        <Button variant="ghost" onClick={() => setIsFullScreen(!isFullScreen)}>
-          <ArrowsPointingOutIcon className="size-8" />
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            fundiary.pages.open("base:diary_write_page", {
-              kind: "edit",
-              data: diary.id,
-            });
-            fundiary.tabbar.select("base:diary_list_tab");
-          }}
-        >
-          <PencilSquareIcon className="size-8" />
-        </Button>
+      <div className="grow pt-4 text-left">
+        <div className="pt-4 flex gap-2">
+          <Button variant="ghost" onClick={() => showDiaryFullScreen(diary)}>
+            <ArrowsPointingOutIcon className="size-8" />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              fundiary.pages.open("base:diary_write_page", {
+                kind: "edit",
+                data: diary.id,
+              });
+              fundiary.tabbar.select("base:diary_list_tab");
+            }}
+          >
+            <PencilSquareIcon className="size-8" />
+          </Button>
+        </div>
+        <p className="text-lg">
+          作成日: {new Date(diary.createdAt).toLocaleDateString()}
+        </p>
+        <p className="text-lg">
+          更新日: {new Date(diary.updatedAt).toLocaleDateString()}
+        </p>
+        <p className="text-lg">
+          サイズ: {diary.colSize} x {diary.rowSize}
+        </p>
       </div>
-      <p className="text-lg">
-        作成日: {new Date(diary.createdAt).toLocaleDateString()}
-      </p>
-      <p className="text-lg">
-        更新日: {new Date(diary.updatedAt).toLocaleDateString()}
-      </p>
-      <p className="text-lg">
-        サイズ: {diary.colSize} x {diary.rowSize}
-      </p>
     </Card>
   );
 }
@@ -158,7 +167,7 @@ function DiaryTemplateCard({
 }) {
   return (
     <Card variant="bordered" className="w-64 flex flex-col">
-      <div className="grow aspect-square w-full">
+      <div className="aspect-square w-full">
         <PaneGrid
           col={diaryTemplate.colSize}
           row={diaryTemplate.rowSize}
@@ -175,29 +184,31 @@ function DiaryTemplateCard({
           ))}
         </PaneGrid>
       </div>
-      <h2 className="text-3xl font-bold">{diaryTemplate.name}</h2>
-      <p className="text-lg">
-        作成日: {new Date(diaryTemplate.createdAt).toLocaleDateString()}
-      </p>
-      <p className="text-lg">
-        更新日: {new Date(diaryTemplate.updatedAt).toLocaleDateString()}
-      </p>
-      <p className="text-lg">
-        サイズ: {diaryTemplate.colSize} x {diaryTemplate.rowSize}
-      </p>
-      <Button
-        variant="outlined"
-        className="px-2 py-1"
-        onClick={() => {
-          fundiary.pages.open("base:diary_write_page", {
-            kind: "template",
-            data: diaryTemplate.id,
-          });
-          fundiary.tabbar.select("base:diary_write_tab");
-        }}
-      >
-        使う
-      </Button>
+      <div className="grow pt-4 text-left">
+        <h2 className="text-3xl font-bold">{diaryTemplate.name}</h2>
+        <p className="text-lg">
+          作成日: {new Date(diaryTemplate.createdAt).toLocaleDateString()}
+        </p>
+        <p className="text-lg">
+          更新日: {new Date(diaryTemplate.updatedAt).toLocaleDateString()}
+        </p>
+        <p className="text-lg">
+          サイズ: {diaryTemplate.colSize} x {diaryTemplate.rowSize}
+        </p>
+        <Button
+          variant="outlined"
+          className="text-xl px-2 py-1"
+          onClick={() => {
+            fundiary.pages.open("base:diary_write_page", {
+              kind: "template",
+              data: diaryTemplate.id,
+            });
+            fundiary.tabbar.select("base:diary_write_tab");
+          }}
+        >
+          使う
+        </Button>
+      </div>
     </Card>
   );
 }

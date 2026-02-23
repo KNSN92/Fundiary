@@ -1,3 +1,4 @@
+import ArrowsPointingOutIcon from "@heroicons/react/24/solid/ArrowsPointingOutIcon";
 import { ArkErrors } from "arktype";
 import type { DiaryPaneData } from "fundiary-api/api/diary-pane";
 import { Suspense, use, useState } from "react";
@@ -7,11 +8,45 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import * as Calendar from "@/components/calendar/Calendar";
+import { Button } from "@/components/common/Button";
 import LoadingSpin from "@/components/common/LoadingSpin";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { type DiaryDBResponse, getDiariesByDate } from "@/db/diary-db";
+import fundiary from "@/fundiary";
 import cn from "@/libs/cn";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import type { Identifier } from "fundiary-api";
+
+function showDiaryFullScreen(diary: DiaryDBResponse) {
+  const id: Identifier = `diary_fullscreen:${diary.id}`;
+  fundiary.modals.show({
+    id,
+    bgClickToClose: true,
+    centered: true,
+    render: () => (
+      <div
+        className="max-w-[80vw] h-[80vh] size-auto bg-base-bg rounded-xl"
+        style={{
+          aspectRatio: `${diary.colSize} / ${diary.rowSize}`,
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => fundiary.modals.closeThis(id)}
+          className="absolute top-4 right-4 cursor-pointer"
+        >
+          <XMarkIcon className="size-8 text-base-text hover:text-base-text-hover" />
+        </button>
+        <PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
+          {diary.data.map((paneData) => (
+            <Pane key={paneData.id} data={paneData} />
+          ))}
+        </PaneGrid>
+      </div>
+    ),
+  });
+}
 
 // 日誌表示コンポーネント
 function DiaryDisplay({
@@ -34,9 +69,14 @@ function DiaryDisplay({
     const diary = diaries[0];
     return (
       <div className="size-full flex flex-col">
-        <p className="text-sm text-gray-text mb-2 shrink-0">
-          {diary.templateName ?? "テンプレートなし"}
-        </p>
+        <div className="flex items-center gap-2 mb-2 shrink-0">
+          <p className="text-sm text-gray-text">
+            {diary.templateName ?? "テンプレートなし"}
+          </p>
+          <Button variant="ghost" onClick={() => showDiaryFullScreen(diary)}>
+            <ArrowsPointingOutIcon className="size-5" />
+          </Button>
+        </div>
         <div className="grow min-h-0">
           <PaneGrid col={diary.colSize} row={diary.rowSize}>
             {diary.data.map((pane: DiaryPaneData) => (
@@ -61,10 +101,18 @@ function DiaryDisplay({
       {diaries.map((diary, index) => (
         <SwiperSlide key={diary.id} className="h-auto!">
           <div className="size-full flex flex-col pb-8 px-4">
-            <p className="text-sm text-gray-text mb-2 shrink-0">
-              {diary.templateName ?? "テンプレートなし"} ({index + 1}/
-              {diaries.length})
-            </p>
+            <div className="flex items-center gap-2 mb-2 shrink-0">
+              <p className="text-sm text-gray-text">
+                {diary.templateName ?? "テンプレートなし"} ({index + 1}/
+                {diaries.length})
+              </p>
+              <Button
+                variant="ghost"
+                onClick={() => showDiaryFullScreen(diary)}
+              >
+                <ArrowsPointingOutIcon className="size-5" />
+              </Button>
+            </div>
             <div className="grow min-h-0">
               <PaneGrid col={diary.colSize} row={diary.rowSize} showGrid={true}>
                 {diary.data.map((pane: DiaryPaneData) => (
