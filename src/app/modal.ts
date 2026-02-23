@@ -28,8 +28,12 @@ export class Modals {
 
 	closeThis(id: Identifier) {
 		const currentStack = store.get(modalStackAtom);
-		if (currentStack.find((m) => m.id === id)) {
-			this.close();
+		const index = currentStack.findIndex((m) => m.id === id);
+		if (index !== -1) {
+			const newStack = [...currentStack];
+			newStack.splice(index, 1);
+			store.set(modalStackAtom, newStack);
+			stackedModalIdentifiers.delete(id);
 		}
 	}
 
