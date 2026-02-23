@@ -49,7 +49,7 @@ export default function DiaryListPage() {
             return null;
           }
           return diary;
-        }) 
+        })
         .filter((diary) => diary != null);
       setDiaries(passedDiaries as DiaryDBResponse[]);
     });
@@ -59,7 +59,11 @@ export default function DiaryListPage() {
       <div className="grow h-full p-4 overflow-y-auto">
         <h1 className="mb-4">日誌一覧</h1>
         <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
-          {diaries.length === 0 && <div className="mx-auto mt-8 text-base-text-hover">日誌がありません</div>}
+          {diaries.length === 0 && (
+            <div className="mx-auto mt-8 text-base-text-hover">
+              日誌がありません
+            </div>
+          )}
           {diaries.map((diary) => (
             <DiaryCard key={diary.id} diary={diary} />
           ))}
@@ -67,7 +71,11 @@ export default function DiaryListPage() {
         <hr className="my-8" />
         <h1 className="mb-4">日誌テンプレート一覧</h1>
         <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
-          {diaryTemplates.length === 0 && <div className="mx-auto mt-8 text-base-text-hover">日誌テンプレートがありません</div>}
+          {diaryTemplates.length === 0 && (
+            <div className="mx-auto mt-8 text-base-text-hover">
+              日誌テンプレートがありません
+            </div>
+          )}
           {diaryTemplates.map((diaryTemplate) => (
             <DiaryTemplateCard
               key={diaryTemplate.id}
@@ -197,20 +205,20 @@ function DiaryTemplateCard({
         <p className="text-lg">
           サイズ: {diaryTemplate.colSize} x {diaryTemplate.rowSize}
         </p>
-        <Button
-          variant="outlined"
-          className="text-xl px-2 py-1"
-          onClick={() => {
-            fundiary.pages.open("base:diary_write_page", {
-              kind: "template",
-              data: diaryTemplate.id,
-            });
-            fundiary.tabbar.select("base:diary_write_tab");
-          }}
-        >
-          使う
-        </Button>
       </div>
+      <Button
+        variant="outlined"
+        className="text-xl px-2 py-1 mt-4"
+        onClick={() => {
+          fundiary.pages.open("base:diary_write_page", {
+            kind: "template",
+            data: diaryTemplate.id,
+          });
+          fundiary.tabbar.select("base:diary_write_tab");
+        }}
+      >
+        使う
+      </Button>
     </Card>
   );
 }
