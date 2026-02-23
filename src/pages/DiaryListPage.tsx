@@ -103,7 +103,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
     );
   }
   return (
-    <div key={diary.id} className="w-64 flex flex-col">
+    <Card variant="bordered" key={diary.id} className="w-64 flex flex-col">
       <div className="grow">
         <PaneGrid
           col={diary.colSize}
@@ -147,7 +147,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
       <p className="text-lg">
         サイズ: {diary.colSize} x {diary.rowSize}
       </p>
-    </div>
+    </Card>
   );
 }
 
@@ -157,7 +157,7 @@ function DiaryTemplateCard({
   diaryTemplate: DiaryTemplateDBResponse;
 }) {
   return (
-    <Card variant="elevated" key={diaryTemplate.id} className="w-64 h-fit">
+    <Card variant="bordered" key={diaryTemplate.id} className="w-64 h-fit">
       <div className="grow">
         <PaneGrid
           col={diaryTemplate.colSize}
