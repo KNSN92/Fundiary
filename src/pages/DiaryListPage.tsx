@@ -49,7 +49,7 @@ export default function DiaryListPage() {
             return null;
           }
           return diary;
-        })
+        }) 
         .filter((diary) => diary != null);
       setDiaries(passedDiaries as DiaryDBResponse[]);
     });
@@ -58,14 +58,16 @@ export default function DiaryListPage() {
     <div className="text-base-text size-full flex justify-start text-4xl text-center">
       <div className="grow h-full p-4 overflow-y-auto">
         <h1 className="mb-4">日誌一覧</h1>
-        <div className="flex flex-wrap gap-4 items-stretch">
+        <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
+          {diaries.length === 0 && <div className="mx-auto mt-8 text-base-text-hover">日誌がありません</div>}
           {diaries.map((diary) => (
             <DiaryCard key={diary.id} diary={diary} />
           ))}
         </div>
         <hr className="my-8" />
         <h1 className="mb-4">日誌テンプレート一覧</h1>
-        <div className="flex flex-wrap gap-4 items-stretch">
+        <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
+          {diaryTemplates.length === 0 && <div className="mx-auto mt-8 text-base-text-hover">日誌テンプレートがありません</div>}
           {diaryTemplates.map((diaryTemplate) => (
             <DiaryTemplateCard
               key={diaryTemplate.id}
