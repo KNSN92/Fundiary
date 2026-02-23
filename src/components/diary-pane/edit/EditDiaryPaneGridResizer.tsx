@@ -1,5 +1,4 @@
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import cn from "@/libs/cn";
 
 interface Props {
   canResize: { col: boolean; row: boolean };
