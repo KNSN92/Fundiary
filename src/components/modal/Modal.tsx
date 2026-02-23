@@ -23,6 +23,7 @@ export default function ModalRoot() {
       }}
       className={cn("fixed inset-0 z-80 w-screen h-screen", {
         "pointer-events-none": modal.canControlBg,
+        "*:pointer-events-auto": modal.canControlBg,
         "bg-black/50": !modal.bgColor,
         "flex items-center justify-center": modal.centered,
       })}
