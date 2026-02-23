@@ -55,7 +55,13 @@ export default function PaneGrid({
   return (
     <div ref={gridWrapperRef} className={cn("size-full flex", alignX, alignY)}>
       <div
-        className={cn(sizeClass, "grid", className, showGrid && "*:border")}
+        className={cn(
+          sizeClass,
+          "grid",
+          className,
+          showGrid && "*:border",
+          showGrid && "*:border-base",
+        )}
         style={{
           gridTemplateColumns: `repeat(${col}, 1fr)`,
           gridTemplateRows: `repeat(${row}, 1fr)`,
