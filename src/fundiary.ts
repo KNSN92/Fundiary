@@ -29,7 +29,18 @@ const fundiary: Fundiary = {
 
 export default fundiary;
 
-export function init_fundiary() {
+/** HMR時などにシングルトンの状態をリセットする */
+function resetFundiary() {
+	fundiary.modals.closeAll();
+	fundiary.diaryPanes = new DiaryPanes();
+	fundiary.pages = new Pages();
+	fundiary.tabbar = new Tabbar();
+	fundiary.modals = new Modals();
+}
+
+export function initFundiary() {
+	resetFundiary();
+
 	fundiary.diaryPanes.registry(textPane);
 	fundiary.diaryPanes.registry(imagePane);
 
