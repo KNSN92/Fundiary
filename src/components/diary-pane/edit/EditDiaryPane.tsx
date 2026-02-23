@@ -90,7 +90,7 @@ export default function EditablePane({
         setData({ ...data, pos, size });
       }}
       onMouseDown={onClick}
-      className={"relative border border-white overflow-hidden"}
+      className={"relative border-2 border-white overflow-hidden"}
     >
       {focused && (
         <div className="absolute inset-0 size-full bg-transparent border-4 border-red-400" />
