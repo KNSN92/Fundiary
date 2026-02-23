@@ -22,11 +22,11 @@ function DiaryDisplay({
   const diaries = use(diariesPromise);
 
   if (diaries instanceof ArkErrors) {
-    return <p className="text-red-400">日誌の取得に失敗しました</p>;
+    return <p className="text-danger-text">日誌の取得に失敗しました</p>;
   }
 
   if (diaries.length === 0) {
-    return <p className="text-stone-400">この日の日誌はありません</p>;
+    return <p className="text-gray-text">この日の日誌はありません</p>;
   }
 
   // 1件のみの場合はSwiperを使わない
@@ -34,7 +34,7 @@ function DiaryDisplay({
     const diary = diaries[0];
     return (
       <div className="size-full flex flex-col">
-        <p className="text-sm text-stone-400 mb-2 shrink-0">
+        <p className="text-sm text-gray-text mb-2 shrink-0">
           {diary.templateName ?? "テンプレートなし"}
         </p>
         <div className="grow min-h-0">
@@ -61,7 +61,7 @@ function DiaryDisplay({
       {diaries.map((diary, index) => (
         <SwiperSlide key={diary.id} className="h-auto!">
           <div className="size-full flex flex-col pb-8 px-4">
-            <p className="text-sm text-stone-400 mb-2 shrink-0">
+            <p className="text-sm text-gray-text mb-2 shrink-0">
               {diary.templateName ?? "テンプレートなし"} ({index + 1}/
               {diaries.length})
             </p>
@@ -111,8 +111,8 @@ export default function DiaryCalendarPage() {
         onClick={() => handleDateSelect(new Date(year, month - 1, day))}
         className={cn("rounded-full transition-colors", {
           "bg-red-400": isToday && !isSelected,
-          "bg-blue-500 text-white": isSelected,
-          "text-stone-400": !isCurrentMonth && !isSelected,
+          "bg-blue-500 text-base-text": isSelected,
+          "text-gray-text": !isCurrentMonth && !isSelected,
           "hover:bg-stone-700": isCurrentMonth && !isSelected && !isToday,
           "cursor-pointer": isCurrentMonth && !isSelected,
         })}
@@ -127,7 +127,7 @@ export default function DiaryCalendarPage() {
   const selectedDay = selectedDate.getDate();
 
   return (
-    <div className="text-white size-full flex text-lg">
+    <div className="text-base-text size-full flex text-lg">
       <div className="w-96 h-full px-4 pt-16 shrink-0">
         <Calendar.Root>
           <Calendar.Header>

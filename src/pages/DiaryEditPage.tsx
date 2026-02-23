@@ -33,7 +33,7 @@ export default function DiaryEditPage() {
     (diaryData) => diaryData.pos.y + diaryData.size.height < gridSize.row,
   );
   return (
-    <div className="text-white overflow-hidden size-full flex items-center justify-start text-4xl text-center">
+    <div className="text-base-text overflow-hidden size-full flex items-center justify-start text-4xl text-center">
       <div className="relative h-full p-8 pt-16 grow overflow-hidden">
         <div className="absolute bottom-0 left-0 p-4 z-10">
           <EditDiaryPaneGridResizer

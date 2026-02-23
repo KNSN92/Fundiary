@@ -54,7 +54,7 @@ export default function DiaryListPage() {
     });
   }, []);
   return (
-    <div className="text-white size-full flex justify-start text-4xl text-center">
+    <div className="text-base-text size-full flex justify-start text-4xl text-center">
       <div className="grow h-full p-4 overflow-y-auto border-l-2 border-base-dark">
         <h1 className="mb-4">日誌一覧</h1>
         <div className="flex flex-wrap gap-4 items-stretch">

@@ -105,7 +105,7 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
 
   if (!imageUrl) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-gray-400">
+      <div className="w-full h-full flex items-center justify-center text-gray-text">
         <span className="text-4xl">🖼️</span>
       </div>
     );
