@@ -64,7 +64,7 @@ export default function DiaryListPage() {
         </div>
         <hr className="my-8" />
         <h1 className="mb-4">日誌テンプレート一覧</h1>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 items-stretch">
           {diaryTemplates.map((diaryTemplate) => (
             <DiaryTemplateCard
               key={diaryTemplate.id}
@@ -103,12 +103,12 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
     );
   }
   return (
-    <Card variant="bordered" key={diary.id} className="w-64 flex flex-col">
-      <div className="grow">
+    <Card variant="bordered" className="w-64 flex flex-col">
+      <div className="grow aspect-square w-full">
         <PaneGrid
           col={diary.colSize}
           row={diary.rowSize}
-          align={{ x: "left", y: "top" }}
+          align={{ x: "center", y: "top" }}
           showGrid={true}
         >
           {diary.data.map((paneData) => (
@@ -157,8 +157,8 @@ function DiaryTemplateCard({
   diaryTemplate: DiaryTemplateDBResponse;
 }) {
   return (
-    <Card variant="bordered" key={diaryTemplate.id} className="w-64 h-fit">
-      <div className="grow">
+    <Card variant="bordered" className="w-64 flex flex-col">
+      <div className="grow aspect-square w-full">
         <PaneGrid
           col={diaryTemplate.colSize}
           row={diaryTemplate.rowSize}
