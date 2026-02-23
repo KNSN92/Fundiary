@@ -8,6 +8,7 @@ import EditablePane from "@/components/diary-pane/edit/EditDiaryPane";
 import EditablePaneGrid from "@/components/diary-pane/edit/EditDiaryPaneGrid";
 import EditDiaryPaneGridResizer from "@/components/diary-pane/edit/EditDiaryPaneGridResizer";
 import { InputComponent } from "@/components/input/Input";
+import { Button } from "@/components/common/Button";
 import { createDiaryTemplate } from "@/db/diary-template-db";
 import fundiary from "@/fundiary";
 import type { Uuid } from "fundiary-api";
@@ -65,8 +66,8 @@ export default function DiaryEditPage() {
         <div className="flex flex-col gap-4">
           <h1 className="font-bold text-3xl">テンプレート設定</h1>
           <div className="w-full flex gap-2">
-            <button
-              type="button"
+            <Button
+              variant="primary"
               disabled={!templateName}
               onClick={async () => {
                 if (templateName != null) {
@@ -75,10 +76,10 @@ export default function DiaryEditPage() {
                   fundiary.tabbar.select("base:diary_list_tab");
                 }
               }}
-              className="w-24 bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
+              className="w-24"
             >
               保存
-            </button>
+            </Button>
             <input
               type="text"
               placeholder="名称"
@@ -125,9 +126,9 @@ export default function DiaryEditPage() {
             <div className="flex flex-col gap-4">
               <h1 className="font-bold text-3xl">追加</h1>
               {fundiary.diaryPanes.getAll().map((pane) => (
-                <button
-                  type="button"
-                  className="w-fit p-2 mx-auto text-2xl bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
+                <Button
+                  variant="primary"
+                  className="w-fit p-2 mx-auto text-2xl"
                   onClick={() => {
                     setDiaryDataList([
                       ...diaryDataList,
@@ -141,7 +142,7 @@ export default function DiaryEditPage() {
                   key={pane.identifier}
                 >
                   {pane.name}
-                </button>
+                </Button>
               ))}
             </div>
           </>

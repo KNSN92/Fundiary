@@ -8,6 +8,7 @@ import { usePagePayload } from "@/app/page";
 import Pane from "@/components/diary-pane/DiaryPane";
 import PaneGrid from "@/components/diary-pane/DiaryPaneGrid";
 import { InputComponent } from "@/components/input/Input";
+import { Button } from "@/components/common/Button";
 import { createDiary, getDiary, updateDiary } from "@/db/diary-db";
 import { getDiaryTemplate } from "@/db/diary-template-db";
 import fundiary from "@/fundiary";
@@ -86,9 +87,9 @@ export default function DiaryWritePage() {
           )),
         )}
         <div className="flex gap-4 flex-row">
-          <button
-            type="button"
-            className="w-fit px-4 py-2 text-2xl bg-blue-700 disabled:bg-blue-900 hover:bg-blue-900 enabled:cursor-pointer"
+          <Button
+            variant="primary"
+            className="w-fit px-4 py-2 text-2xl"
             onClick={async () => {
               if (editingDiaryId != null) {
                 await updateDiary(editingDiaryId, diaryDataList);
@@ -100,17 +101,17 @@ export default function DiaryWritePage() {
             }}
           >
             保存
-          </button>
-          <button
-            type="button"
-            className="w-fit px-4 py-2 text-2xl bg-red-700 disabled:bg-red-900 hover:bg-red-900 enabled:cursor-pointer text-nowrap"
+          </Button>
+          <Button
+            variant="danger"
+            className="w-fit px-4 py-2 text-2xl text-nowrap"
             onClick={async () => {
               fundiary.pages.open("base:diary_list_page");
               fundiary.tabbar.select("base:diary_list_tab");
             }}
           >
             キャンセル
-          </button>
+          </Button>
         </div>
       </div>
       <div className="relative size-full px-8 pt-16">

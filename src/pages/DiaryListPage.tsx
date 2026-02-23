@@ -11,6 +11,8 @@ import {
   getDiaryTemplates,
 } from "@/db/diary-template-db";
 import fundiary from "@/fundiary";
+import { Button } from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
 
 export default function DiaryListPage() {
   const [diaryTemplates, setDiaryTemplates] = useState<
@@ -120,16 +122,11 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
         </PaneGrid>
       </div>
       <div className="flex gap-2">
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => setIsFullScreen(!isFullScreen)}
-        >
+        <Button variant="ghost" onClick={() => setIsFullScreen(!isFullScreen)}>
           <ArrowsPointingOutIcon className="size-8" />
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer"
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => {
             fundiary.pages.open("base:diary_write_page", {
               kind: "edit",
@@ -139,7 +136,7 @@ function DiaryCard({ diary }: { diary: DiaryDBResponse }) {
           }}
         >
           <PencilSquareIcon className="size-8" />
-        </button>
+        </Button>
       </div>
       <p className="text-lg">
         作成日: {new Date(diary.createdAt).toLocaleDateString()}
@@ -160,7 +157,7 @@ function DiaryTemplateCard({
   diaryTemplate: DiaryTemplateDBResponse;
 }) {
   return (
-    <div key={diaryTemplate.id} className="w-64 h-fit">
+    <Card variant="elevated" key={diaryTemplate.id} className="w-64 h-fit">
       <div className="grow">
         <PaneGrid
           col={diaryTemplate.colSize}
@@ -188,9 +185,9 @@ function DiaryTemplateCard({
       <p className="text-lg">
         サイズ: {diaryTemplate.colSize} x {diaryTemplate.rowSize}
       </p>
-      <button
-        type="button"
-        className="border border-white rounded-xl px-2 py-1 cursor-pointer hover:brightness-75"
+      <Button
+        variant="outlined"
+        className="px-2 py-1"
         onClick={() => {
           fundiary.pages.open("base:diary_write_page", {
             kind: "template",
@@ -200,7 +197,7 @@ function DiaryTemplateCard({
         }}
       >
         使う
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 }
