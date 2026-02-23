@@ -11,7 +11,7 @@ export function Card({ variant, className, children }: CardProps) {
     <div
       className={cn(
         "rounded-xl p-4 text-base-text",
-        variant === "bordered" && "border border-base-dark bg-base-bg",
+        variant === "bordered" && "border-2 border-base-dark bg-base-bg",
         variant === "elevated" && "bg-base-dark shadow-lg",
         className,
       )}
