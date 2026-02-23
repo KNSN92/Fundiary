@@ -189,16 +189,24 @@ export default function DiaryCalendarPage() {
         </Calendar.Root>
       </div>
 
-      <div className="grow h-full pt-16 flex flex-col overflow-hidden border-l-2 border-base-dark">
-        <h1 className="text-2xl font-bold mb-4 shrink-0">
+      <div className="grow h-full pt-16 px-8 flex flex-col overflow-hidden border-l-2 border-base-dark">
+        <h1 className="text-4xl font-bold mb-4 shrink-0">
           {selectedYear}年{selectedMonth}月{selectedDay}日の日誌
         </h1>
         <div className="grow min-h-0">
-          <Suspense fallback={<LoadingSpin />}>
+          <Suspense fallback={<FallBack />}>
             <DiaryDisplay diariesPromise={diariesPromise} />
           </Suspense>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FallBack() {
+  return (
+    <div className="size-full flex items-center justify-center">
+      <LoadingSpin />
     </div>
   );
 }
