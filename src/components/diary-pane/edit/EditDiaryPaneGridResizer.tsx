@@ -47,7 +47,7 @@ export default function EditDiaryPaneGridResizer({
       >
         <MinusCircleIcon className="size-full group-enabled:group-hover:brightness-80 group-enabled:fill-white group-disabled:fill-red-500" />
       </button>
-      <div className="min-w-16 size-full p-2 aspect-square row-start-2 row-span-2 col-span-2 flex items-center justify-center bg-black text-xl text-base-text font-mono">
+      <div className="min-w-16 size-full p-2 aspect-square row-start-2 row-span-2 col-span-2 flex items-center justify-center bg-base text-xl text-base-text font-mono">
         <span>{size.col}</span>
         <span>x</span>
         <span>{size.row}</span>
