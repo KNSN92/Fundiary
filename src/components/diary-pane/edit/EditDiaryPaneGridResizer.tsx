@@ -3,12 +3,14 @@ import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 interface Props {
   canResize: { col: boolean; row: boolean };
   size: { col: number; row: number };
+  maxSize?: number;
   setSize: (size: { col: number; row: number }) => void;
 }
 
 export default function EditDiaryPaneGridResizer({
   canResize,
   size,
+  maxSize,
   setSize,
 }: Props) {
   return (
@@ -25,17 +27,29 @@ export default function EditDiaryPaneGridResizer({
       </button>
       <button
         type="button"
-        onClick={() => setSize({ col: size.col + 1, row: size.row })}
-        className="h-full aspect-square col-start-2 flex items-center justify-center rouded-full cursor-pointer group"
+        onClick={() =>
+          setSize({
+            col: Math.min(maxSize ?? Infinity, size.col + 1),
+            row: size.row,
+          })
+        }
+        disabled={size.col >= (maxSize ?? Infinity)}
+        className="group h-full aspect-square col-start-2 flex items-center justify-center rouded-full enabled:cursor-pointer"
       >
-        <PlusCircleIcon className="size-full fill-white group-hover:brightness-80" />
+        <PlusCircleIcon className="size-full group-enabled:group-hover:brightness-80 group-enabled:fill-white group-disabled:fill-red-500" />
       </button>
       <button
         type="button"
-        onClick={() => setSize({ col: size.col, row: size.row + 1 })}
-        className="w-full aspect-square row-start-2 col-start-3 flex items-center justify-center rouded-full cursor-pointer group"
+        onClick={() =>
+          setSize({
+            col: size.col,
+            row: Math.min(maxSize ?? Infinity, size.row + 1),
+          })
+        }
+        disabled={size.row >= (maxSize ?? Infinity)}
+        className="group w-full aspect-square row-start-2 col-start-3 flex items-center justify-center rouded-full enabled:cursor-pointer"
       >
-        <PlusCircleIcon className="size-full fill-white group-hover:brightness-80" />
+        <PlusCircleIcon className="size-full group-enabled:group-hover:brightness-80 group-enabled:fill-white group-disabled:fill-red-500" />
       </button>
       <button
         type="button"

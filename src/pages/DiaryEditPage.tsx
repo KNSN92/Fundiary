@@ -15,6 +15,9 @@ import type { Uuid } from "fundiary-api";
 
 const initialDiaryDataList: DiaryPaneData[] = [];
 
+// TODO: 設定から変更出来るようにしたい！
+const MAX_GRID_SIZE = 10;
+
 export default function DiaryEditPage() {
   const [gridSize, setGridSize] = useState({ row: 4, col: 4 });
   const [selectedPaneId, setSelectedPaneId] = useState<Uuid | null>(null);
@@ -39,6 +42,7 @@ export default function DiaryEditPage() {
           <EditDiaryPaneGridResizer
             canResize={{ row: canResizeRow, col: canResizeCol }}
             size={gridSize}
+            maxSize={MAX_GRID_SIZE}
             setSize={setGridSize}
           />
         </div>
