@@ -56,7 +56,7 @@ export function initFundiary() {
 		});
 	fundiary.tabbar
 		.register(
-			new TabbarItem("base:diary_list_tab", createTextTab("日誌\n一覧")),
+			new TabbarItem("base:diary_list_tab", createTextTab("日記\n一覧")),
 		)
 		.events.on("click", ({ toggleSelect }) => {
 			if (toggleSelect()) {
@@ -68,7 +68,7 @@ export function initFundiary() {
 		});
 	fundiary.tabbar
 		.register(
-			new TabbarItem("base:diary_edit_tab", createTextTab("日誌\n編集")),
+			new TabbarItem("base:diary_edit_tab", createTextTab("日記\n編集")),
 		)
 		.events.on("click", ({ toggleSelect }) => {
 			if (toggleSelect()) {

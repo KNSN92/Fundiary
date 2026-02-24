@@ -57,11 +57,11 @@ export default function DiaryListPage() {
   return (
     <div className="text-base-text size-full flex justify-start text-4xl text-center">
       <div className="grow h-full p-4 overflow-y-auto">
-        <h1 className="mb-4">日誌一覧</h1>
+        <h1 className="mb-4">日記一覧</h1>
         <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
           {diaries.length === 0 && (
             <div className="mx-auto mt-8 text-base-text-hover">
-              日誌がありません
+              日記がありません
             </div>
           )}
           {diaries.map((diary) => (
@@ -69,11 +69,11 @@ export default function DiaryListPage() {
           ))}
         </div>
         <hr className="my-8" />
-        <h1 className="mb-4">日誌テンプレート一覧</h1>
+        <h1 className="mb-4">日記テンプレート一覧</h1>
         <div className="min-h-1/3 flex flex-wrap gap-4 items-stretch">
           {diaryTemplates.length === 0 && (
             <div className="mx-auto mt-8 text-base-text-hover">
-              日誌テンプレートがありません
+              日記テンプレートがありません
             </div>
           )}
           {diaryTemplates.map((diaryTemplate) => (

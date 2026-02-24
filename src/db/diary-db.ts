@@ -124,9 +124,9 @@ export async function getDiary(id: Uuid) {
 }
 
 /**
- * 指定された日付の日誌を取得する
+ * 指定された日付の日記を取得する
  * @param date 対象の日付
- * @returns その日に作成された日誌の配列
+ * @returns その日に作成された日記の配列
  */
 export async function updateDiary(id: Uuid, data: DiaryPaneData[]) {
 	const now = new Date().toISOString();

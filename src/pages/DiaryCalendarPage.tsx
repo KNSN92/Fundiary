@@ -48,7 +48,7 @@ function showDiaryFullScreen(diary: DiaryDBResponse) {
   });
 }
 
-// 日誌表示コンポーネント
+// 日記表示コンポーネント
 function DiaryDisplay({
   diariesPromise,
 }: {
@@ -57,11 +57,11 @@ function DiaryDisplay({
   const diaries = use(diariesPromise);
 
   if (diaries instanceof ArkErrors) {
-    return <p className="text-danger-text">日誌の取得に失敗しました</p>;
+    return <p className="text-danger-text">日記の取得に失敗しました</p>;
   }
 
   if (diaries.length === 0) {
-    return <p className="text-gray-text">この日の日誌はありません</p>;
+    return <p className="text-gray-text">この日の日記はありません</p>;
   }
 
   // 1件のみの場合はSwiperを使わない
@@ -191,7 +191,7 @@ export default function DiaryCalendarPage() {
 
       <div className="grow h-full pt-16 px-8 flex flex-col overflow-hidden border-l-2 border-base-dark">
         <h1 className="text-4xl font-bold mb-4 shrink-0">
-          {selectedYear}年{selectedMonth}月{selectedDay}日の日誌
+          {selectedYear}年{selectedMonth}月{selectedDay}日の日記
         </h1>
         <div className="grow min-h-0">
           <Suspense fallback={<FallBack />}>

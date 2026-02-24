@@ -29,7 +29,7 @@ export default function DiaryWritePage() {
     }
 
     if (payload.kind === "edit") {
-      // 既存の日誌を編集
+      // 既存の日記を編集
       const diaryId =
         typeof payload.data === "string" ? fromUuid(payload.data) : null;
       if (diaryId == null) return;
@@ -43,7 +43,7 @@ export default function DiaryWritePage() {
         setDiaryDataList(diary.data as DiaryPaneData[]);
       });
     } else if (payload.kind === "template") {
-      // テンプレートから新規日誌を作成
+      // テンプレートから新規日記を作成
       const templateId =
         typeof payload.data === "string" ? fromUuid(payload.data) : null;
       if (templateId == null) return;
