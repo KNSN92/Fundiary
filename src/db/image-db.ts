@@ -25,7 +25,7 @@ export async function initDB(db: Database) {
  * 画像データの型定義
  */
 export interface ImageData {
-	id: string;
+	id: Uuid;
 	name: string;
 	mimeType: string;
 	size: number;
@@ -39,7 +39,7 @@ export interface ImageData {
  * 画像メタデータの型定義（dataを除いた軽量版）
  */
 export interface ImageMetadata {
-	id: string;
+	id: Uuid;
 	name: string;
 	mimeType: string;
 	size: number;
@@ -137,7 +137,7 @@ export async function getImage(id: string): Promise<ImageData | null> {
 	const db = await getDatabase();
 	const result = await db.select<
 		{
-			id: string;
+			id: Uuid;
 			name: string;
 			mimeType: string;
 			size: number;
@@ -171,7 +171,7 @@ export async function getImage(id: string): Promise<ImageData | null> {
  * @returns 画像メタデータまたはnull
  */
 export async function getImageMetadata(
-	id: string,
+	id: Uuid,
 ): Promise<ImageMetadata | ArkErrors | null> {
 	const db = await getDatabase();
 	const result = await db.select<unknown[]>(
@@ -227,7 +227,7 @@ export async function getImages(
  * @param id 画像ID
  * @returns 削除が成功したかどうか
  */
-export async function deleteImage(id: string): Promise<boolean> {
+export async function deleteImage(id: Uuid): Promise<boolean> {
 	const db = await getDatabase();
 	const result = await db.execute("DELETE FROM Images WHERE id = ?", [id]);
 	return result.rowsAffected > 0;
@@ -238,7 +238,7 @@ export async function deleteImage(id: string): Promise<boolean> {
  * @param id 画像ID
  * @returns Blobまたはnull
  */
-export async function getImageAsBlob(id: string): Promise<Blob | null> {
+export async function getImageAsBlob(id: Uuid): Promise<Blob | null> {
 	const image = await getImage(id);
 	if (image == null) {
 		return null;
@@ -254,7 +254,7 @@ export async function getImageAsBlob(id: string): Promise<Blob | null> {
  * @param id 画像ID
  * @returns Data URLまたはnull
  */
-export async function getImageAsDataURL(id: string): Promise<string | null> {
+export async function getImageAsDataURL(id: Uuid): Promise<string | null> {
 	const blob = await getImageAsBlob(id);
 	if (blob == null) {
 		return null;
@@ -273,7 +273,7 @@ export async function getImageAsDataURL(id: string): Promise<string | null> {
  * @param id 画像ID
  * @returns Object URLまたはnull
  */
-export async function getImageAsObjectURL(id: string): Promise<string | null> {
+export async function getImageAsObjectURL(id: Uuid): Promise<string | null> {
 	const blob = await getImageAsBlob(id);
 	if (blob == null) {
 		return null;
