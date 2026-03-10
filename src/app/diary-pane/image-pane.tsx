@@ -1,4 +1,4 @@
-import { type } from "arktype";
+import { ArkErrors, type } from "arktype";
 import type { DiaryPane } from "fundiary-api/api/diary-pane";
 import { useEffect, useRef, useState } from "react";
 import { getImageAsObjectURL } from "@/db/image-db";
@@ -87,7 +87,11 @@ function ImagePaneComponent({ data }: { data: ImagePaneData }) {
     let cancelled = false;
     getImageAsObjectURL(data.imageId).then((url) => {
       if (cancelled) {
-        if (url) URL.revokeObjectURL(url);
+        if (typeof url === "string") URL.revokeObjectURL(url);
+        return;
+      }
+      if (url instanceof ArkErrors) {
+        setImageUrl(null);
         return;
       }
       imageUrlRef.current = url;

@@ -58,6 +58,10 @@ const ImageMetadataDBResponseValidator = type({
 	createdAt: "string.date.iso",
 });
 
+const ImageDBResponseValidator = ImageMetadataDBResponseValidator.and({
+	data: "string.json"
+})
+
 /**
  * 画像を保存する
  * @param file Fileオブジェクト または Blob
@@ -133,26 +137,19 @@ async function getImageDimensions(
  * @param id 画像ID
  * @returns 画像データまたはnull
  */
-export async function getImage(id: string): Promise<ImageData | null> {
+export async function getImage(id: string): Promise<ImageData | ArkErrors | null> {
 	const db = await getDatabase();
-	const result = await db.select<
-		{
-			id: Uuid;
-			name: string;
-			mimeType: string;
-			size: number;
-			width: number | null;
-			height: number | null;
-			data: string;
-			createdAt: string;
-		}[]
-	>("SELECT * FROM Images WHERE id = ?", [id]);
+	const result = await db.select<unknown[]>("SELECT * FROM Images WHERE id = ?", [id]);
 
 	if (result.length === 0) {
 		return null;
 	}
 
-	const row = result[0];
+	const row = ImageDBResponseValidator(result[0]);
+	if (row instanceof ArkErrors) {
+		return row;
+	}
+
 	return {
 		id: row.id,
 		name: row.name,
@@ -238,10 +235,13 @@ export async function deleteImage(id: Uuid): Promise<boolean> {
  * @param id 画像ID
  * @returns Blobまたはnull
  */
-export async function getImageAsBlob(id: Uuid): Promise<Blob | null> {
+export async function getImageAsBlob(id: Uuid): Promise<Blob | ArkErrors | null> {
 	const image = await getImage(id);
 	if (image == null) {
 		return null;
+	}
+	if (image instanceof ArkErrors) {
+		return image;
 	}
 	// Uint8Arrayから新しいArrayBufferを作成してBlobに渡す
 	const buffer = new ArrayBuffer(image.data.length);
@@ -254,10 +254,13 @@ export async function getImageAsBlob(id: Uuid): Promise<Blob | null> {
  * @param id 画像ID
  * @returns Data URLまたはnull
  */
-export async function getImageAsDataURL(id: Uuid): Promise<string | null> {
+export async function getImageAsDataURL(id: Uuid): Promise<string | ArkErrors | null> {
 	const blob = await getImageAsBlob(id);
 	if (blob == null) {
 		return null;
+	}
+	if (blob instanceof ArkErrors) {
+		return blob;
 	}
 
 	return new Promise((resolve, reject) => {
@@ -273,10 +276,13 @@ export async function getImageAsDataURL(id: Uuid): Promise<string | null> {
  * @param id 画像ID
  * @returns Object URLまたはnull
  */
-export async function getImageAsObjectURL(id: Uuid): Promise<string | null> {
+export async function getImageAsObjectURL(id: Uuid): Promise<string | ArkErrors | null> {
 	const blob = await getImageAsBlob(id);
 	if (blob == null) {
 		return null;
+	}
+	if (blob instanceof ArkErrors) {
+		return blob;
 	}
 	return URL.createObjectURL(blob);
 }

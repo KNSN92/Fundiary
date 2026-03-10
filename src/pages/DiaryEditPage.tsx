@@ -71,7 +71,7 @@ export default function DiaryEditPage() {
           <h1 className="font-bold text-3xl">テンプレート設定</h1>
           <div className="w-full flex gap-2">
             <Button
-              variant="primary"
+              variant="ghost"
               disabled={!templateName}
               onClick={async () => {
                 if (templateName != null) {

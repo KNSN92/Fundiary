@@ -13,6 +13,7 @@ import type {
   TitleInput,
 } from "@/app/input";
 import { deleteImage, getImageAsObjectURL, saveImage } from "@/db/image-db";
+import { ArkErrors } from "arktype";
 
 interface Props<T extends Input> {
   id: string;
@@ -244,7 +245,11 @@ export function ImageInputComponent({
     let cancelled = false;
     getImageAsObjectURL(value).then((url) => {
       if (cancelled) {
-        if (url) URL.revokeObjectURL(url);
+        if (typeof url === "string") URL.revokeObjectURL(url);
+        return;
+      }
+      if (url instanceof ArkErrors) {
+        setPreviewUrl(null);
         return;
       }
       previewUrlRef.current = url;
