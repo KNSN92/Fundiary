@@ -1,4 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
+import { initDB as initUserDB } from "./user-db";
 import { initDB as initDiaryDB } from "./diary-db";
 import { initDB as initDiaryTemplateTable } from "./diary-template-db";
 import { initDB as initImageTable } from "./image-db";
@@ -10,6 +11,7 @@ let db: Database | null = null;
 async function initDB(): Promise<Database> {
 	const db = await Database.load("sqlite:global.db");
 
+	await initUserDB(db);
 	await initDiaryTemplateTable(db);
 	await initDiaryDB(db);
 	await initImageTable(db);
