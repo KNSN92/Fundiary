@@ -1,4 +1,4 @@
-import { TabbarItem } from "fundiary-api";
+import { TabbarItem, Uuid } from "fundiary-api";
 import { Page } from "fundiary-api/api/page";
 import createTextTab from "@/components/tabbar/TextTab";
 import DiaryCalendarPage from "@/pages/DiaryCalendarPage";
@@ -12,6 +12,9 @@ import textPane from "./app/diary-pane/text-pane";
 import { Modals } from "./app/modal";
 import Pages from "./app/page";
 import Tabbar from "./app/tabbar";
+import { getUser, switchUser } from "./app/user";
+import { createUser, getUserList } from "./db/user-db";
+import { ArkErrors } from "arktype";
 
 export interface Fundiary {
 	diaryPanes: DiaryPanes;
@@ -101,6 +104,16 @@ export async function initFundiary() {
 	fundiary.pages.register(
 		new Page("base:diary_calendar_page", DiaryCalendarPage),
 	);
+
+	const users = await getUserList();
+	if(users instanceof ArkErrors) return;
+	let id: Uuid;
+	if(users.length === 0) {
+		id = (await createUser("Guest")).id;
+	}else {
+		id = users[0].id;
+	}
+	await switchUser(id);
 
 	fundiary.pages.open("base:welcome_page");
 }
