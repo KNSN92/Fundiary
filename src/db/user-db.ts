@@ -108,7 +108,7 @@ export async function getStreak(id: Uuid): Promise<number | ArkErrors | null> {
 	return streakLatestDay - streakBeginDay;
 }
 
-type StreakStatus = "streaking" | "broken";
+export type StreakStatus = "streaking" | "broken";
 
 export async function streakStatus(
 	id: Uuid,
