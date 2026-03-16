@@ -38,7 +38,7 @@ function resetFundiary() {
 	fundiary.modals = new Modals();
 }
 
-export function initFundiary() {
+export async function initFundiary() {
 	resetFundiary();
 
 	fundiary.diaryPanes.registry(textPane);

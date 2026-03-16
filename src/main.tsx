@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import UI from "./ui";
 import { initFundiary } from "./fundiary";
 
-initFundiary();
+await initFundiary();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
