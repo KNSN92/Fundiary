@@ -6,7 +6,14 @@ interface OnloadEvent {
 	payload: null;
 }
 
-type PageEvents = OnloadEvent;
+interface OncloseEvent {
+	name: "onclose";
+	payload: {
+		preventClose: () => void;
+	};
+}
+
+type PageEvents = OnloadEvent | OncloseEvent;
 
 export class Page {
 	id: Identifier;

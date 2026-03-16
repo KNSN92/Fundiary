@@ -40,6 +40,18 @@ export default class Pages {
 
   open(id: Identifier, payload?: { kind: string; data: unknown }) {
     if (!this.#pages.has(id)) throw new Error(`Page not found: ${id}`);
+    const openingPage = store.get(openingPageData).openingPage;
+    if (openingPage) {
+      let prevented = false;
+      this.#pages.get(openingPage)?.events.emit("onclose", {
+        preventClose() {
+          prevented = true;
+        },
+      });
+      if (prevented) {
+        return;
+      }
+    }
     store.set(openingPageData, (prev) => ({
       openingPage: id,
       openingPagePayload: payload ?? null,
@@ -50,6 +62,18 @@ export default class Pages {
   close(id?: Identifier) {
     if (id && store.get(openingPageData).openingPage !== id) {
       return;
+    }
+    const openingPage = store.get(openingPageData).openingPage;
+    if (openingPage) {
+      let prevented = false;
+      this.#pages.get(openingPage)?.events.emit("onclose", {
+        preventClose() {
+          prevented = true;
+        },
+      });
+      if (prevented) {
+        return;
+      }
     }
     store.set(openingPageData, () => ({
       openingPage: null,
